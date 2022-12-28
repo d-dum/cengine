@@ -17,5 +17,7 @@ typedef struct{
 
 ShaderProgram* newShaderProgram(Shader** shaders, long shaderArrayLength);
 void shaderProgramCleanup(ShaderProgram* program);
+void useProgram(ShaderProgram* program);
+void stopProgram(ShaderProgram* program);
 
 #endif //ENGINE_SHADERPROGRAM_H

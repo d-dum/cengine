@@ -36,6 +36,14 @@ ShaderProgram* newShaderProgram(Shader** shaders, long shaderArrayLength){
     return program;
 }
 
+void useProgram(ShaderProgram* program){
+    glUseProgram(program->programId);
+}
+
+void stopProgram(ShaderProgram* program){
+    glUseProgram(0);
+}
+
 void shaderProgramCleanup(ShaderProgram* program){
     for(int i = 0; i < program->shaderArrayLength; i++){
         glDetachShader(program->programId, program->shaders[i]->shaderId);

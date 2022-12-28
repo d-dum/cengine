@@ -7,6 +7,7 @@
 #include "engine/Core/Shader.h"
 #include "engine/Core/ShaderProgram.h"
 #include "engine/Core/MeshLoader.h"
+#include "engine/Core/Renderer.h"
 
 int main() {
 
@@ -48,26 +49,13 @@ int main() {
 
 
     do {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0, 0, 1, 1);
-        glUseProgram(program->programId);
+        prepareRenderer();
 
-        glBindVertexArray(mesh->vao);
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
-        glVertexAttribPointer(
-                0,
-                3,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void*) 0
-                );
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glUseProgram(0);
+        useProgram(program);
+
+            renderMesh(mesh);
+
+        stopProgram(program);
 
         update(manager);
     }while(isCloseRequested(manager) == 0);
