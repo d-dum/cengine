@@ -18,6 +18,13 @@ int main() {
     vec4* proj = createPerspectiveMatrix(45.f, 1024, 768, 0.1f, 100.f);
     printMatrix(proj);
 
+    vec3 eye = {4, 3, 3};
+    vec3 center = {0, 0, 0};
+    vec3 up = {0, 1, 0};
+
+    vec4* cam = createCameraMatrix(eye, center, up);
+    vec4* mvp = createModelMatrix(proj, cam);
+
 
     static GLfloat g_vertex_buffer_data[] = {
             -1.0f, -1.0f, 0.0f,
@@ -58,7 +65,8 @@ int main() {
         prepareRenderer();
 
         useProgram(program);
-
+            GLint location = glGetUniformLocation(program->programId, "MVP");
+            glUniformMatrix4fv(location, 1, GL_FALSE, mvp[0]);
             renderMesh(mesh);
 
         stopProgram(program);
@@ -73,6 +81,8 @@ int main() {
     free(shaders);
 
     freeMatrixVector(proj);
+    freeMatrixVector(cam);
+    freeMatrixVector(mvp);
 
     deleteMesh(mesh);
 
