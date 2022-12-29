@@ -6,8 +6,26 @@
 #define ENGINE_RENDERER_H
 
 #include "MeshLoader.h"
+#include "ShaderProgram.h"
 
-void prepareRenderer();
+#include <cglm/cglm.h>
+
+typedef struct {
+    vec4* projection;
+    float fov;
+    float width;
+    float height;
+    float near;
+    float far;
+} Renderer;
+
+Renderer* newRenderer(float fov, float height, float width, float near, float far);
+
+void updateProjection(Renderer* renderer);
+
+void rendererCleanup(Renderer* renderer);
+
+void prepareRenderer(Renderer* renderer, ShaderProgram* program);
 
 void renderMesh(Mesh* mesh);
 

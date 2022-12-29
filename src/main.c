@@ -16,15 +16,14 @@ int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    vec4* proj = createPerspectiveMatrix(45.f, 1024, 768, 0.1f, 100.f);
-    printMatrix(proj);
+
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
     vec3 up = {0, 1, 0};
 
     vec4* cam = createCameraMatrix(eye, center, up);
-    vec4* mvp = createModelMatrix(proj, cam);
+
 
 
     static GLfloat g_vertex_buffer_data[] = {
@@ -62,11 +61,12 @@ int main() {
     Mesh* mesh = loadMesh(g_vertex_buffer_data, sizeof(g_vertex_buffer_data));
     Entity* entity = newEntity(mesh);
 
+    Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
+
     do {
-        prepareRenderer();
+        prepareRenderer(renderer, program);
 
         useProgram(program);
-            loadMatrix(program, proj, "Projection");
             loadMatrix(program, cam, "View");
             loadMatrix(program, entity->mvp, "Model");
 
@@ -82,16 +82,14 @@ int main() {
     shaderProgramCleanup(program);
     free(shaders);
 
-    freeMatrixVector(proj);
     freeMatrixVector(cam);
-    freeMatrixVector(mvp);
 
     deleteMesh(mesh);
     entity->mesh = NULL;
 
     entityCleanup(entity);
 
-
+    rendererCleanup(renderer);
 
     return 0;
 }
