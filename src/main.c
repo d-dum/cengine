@@ -68,9 +68,8 @@ int main() {
 
         useProgram(program);
             loadMatrix(program, cam, "View");
-            loadMatrix(program, entity->mvp, "Model");
 
-            renderMesh(mesh);
+            renderEntity(renderer, entity, program);
         stopProgram(program);
 
         update(manager);

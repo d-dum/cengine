@@ -9,6 +9,7 @@
 
 #include "../Utils/Mat.h"
 #include "ShaderProgram.h"
+#include "../GameObject/Entity.h"
 
 void prepareRenderer(Renderer* renderer, ShaderProgram* program){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -18,7 +19,7 @@ void prepareRenderer(Renderer* renderer, ShaderProgram* program){
     stopProgram(program);
 }
 
-void renderMesh(Mesh* mesh){
+void renderMesh(Renderer* renderer, Mesh* mesh){
     glBindVertexArray(mesh->vao);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
@@ -34,6 +35,11 @@ void renderMesh(Mesh* mesh){
     glDisableVertexAttribArray(0);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program){
+    loadMatrix(program, entity->mvp, "Model");
+    renderMesh(renderer, entity->mesh);
 }
 
 Renderer* newRenderer(float fov, float height, float width, float near, float far){

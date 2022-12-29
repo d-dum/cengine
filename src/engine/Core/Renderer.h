@@ -7,6 +7,7 @@
 
 #include "MeshLoader.h"
 #include "ShaderProgram.h"
+#include "../GameObject/Entity.h"
 
 #include <cglm/cglm.h>
 
@@ -27,6 +28,8 @@ void rendererCleanup(Renderer* renderer);
 
 void prepareRenderer(Renderer* renderer, ShaderProgram* program);
 
-void renderMesh(Mesh* mesh);
+void renderMesh(Renderer* renderer, Mesh* mesh);
+
+void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program);
 
 #endif //ENGINE_RENDERER_H
