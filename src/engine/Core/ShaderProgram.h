@@ -6,7 +6,7 @@
 #define ENGINE_SHADERPROGRAM_H
 
 #include <GL/glew.h>
-
+#include <cglm/cglm.h>
 #include "Shader.h"
 
 typedef struct{
@@ -19,5 +19,6 @@ ShaderProgram* newShaderProgram(Shader** shaders, long shaderArrayLength);
 void shaderProgramCleanup(ShaderProgram* program);
 void useProgram(ShaderProgram* program);
 void stopProgram(ShaderProgram* program);
+int loadMatrix(ShaderProgram* program, vec4* mat, const GLchar* uniformName);
 
 #endif //ENGINE_SHADERPROGRAM_H

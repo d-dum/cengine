@@ -9,6 +9,7 @@
 #include "engine/Core/MeshLoader.h"
 #include "engine/Core/Renderer.h"
 #include "engine/Utils/Mat.h"
+#include "engine/GameObject/Entity.h"
 #include <cglm/cglm.h>
 
 int main() {
@@ -18,7 +19,7 @@ int main() {
     vec4* proj = createPerspectiveMatrix(45.f, 1024, 768, 0.1f, 100.f);
     printMatrix(proj);
 
-    vec3 eye = {4, 3, 3};
+    vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
     vec3 up = {0, 1, 0};
 
@@ -59,16 +60,17 @@ int main() {
     fflush(stdout);
 
     Mesh* mesh = loadMesh(g_vertex_buffer_data, sizeof(g_vertex_buffer_data));
-
+    Entity* entity = newEntity(mesh);
 
     do {
         prepareRenderer();
 
         useProgram(program);
-            GLint location = glGetUniformLocation(program->programId, "MVP");
-            glUniformMatrix4fv(location, 1, GL_FALSE, mvp[0]);
-            renderMesh(mesh);
+            loadMatrix(program, proj, "Projection");
+            loadMatrix(program, cam, "View");
+            loadMatrix(program, entity->mvp, "Model");
 
+            renderMesh(mesh);
         stopProgram(program);
 
         update(manager);
@@ -84,7 +86,7 @@ int main() {
     freeMatrixVector(cam);
     freeMatrixVector(mvp);
 
-    deleteMesh(mesh);
+    entityCleanup(entity);
 
     return 0;
 }

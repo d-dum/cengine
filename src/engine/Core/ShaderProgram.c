@@ -9,6 +9,7 @@
 #include <GL/glew.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cglm/cglm.h>
 
 ShaderProgram* newShaderProgram(Shader** shaders, long shaderArrayLength){
     GLuint programID = glCreateProgram();
@@ -51,4 +52,14 @@ void shaderProgramCleanup(ShaderProgram* program){
     }
     glDeleteProgram(program->programId);
     free(program);
+}
+
+int loadMatrix(ShaderProgram* program, vec4* mat, const GLchar* uniformName){
+    GLint location = glGetUniformLocation(program->programId, uniformName);
+    if(location == -1){
+        fprintf(stderr, "Location of uniform %s not found", uniformName);
+        return 0;
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, mat[0]);
+    return 1;
 }

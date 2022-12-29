@@ -5,6 +5,7 @@
 #include "Mat.h"
 
 #include <cglm/cglm.h>
+#include <GL/glew.h>
 
 #include "Mem.h"
 
@@ -49,4 +50,9 @@ vec4* createModelMatrix(vec4* projection, vec4* view){
     return mvp;
 }
 
+vec4* createIdentityMatrix(){
+    vec4* mat = MAT4ALLOC;
+    glm_mat4_identity(mat);
+    return mat;
+}
 
