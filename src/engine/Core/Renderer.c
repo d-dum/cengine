@@ -10,11 +10,13 @@
 #include "../Utils/Mat.h"
 #include "ShaderProgram.h"
 
-void prepareRenderer(Renderer* renderer, ShaderProgram* program){
+
+void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0, 1, 1);
     useProgram(program);
     loadMatrix(program, renderer->projection, "Projection");
+    loadMatrix(program, camera->view, "View");
     stopProgram(program);
 }
 

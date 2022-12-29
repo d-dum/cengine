@@ -10,6 +10,8 @@
 #include "engine/Core/Renderer.h"
 #include "engine/Utils/Mat.h"
 #include "engine/GameObject/Entity.h"
+#include "engine/Utils/Misc.h"
+#include "engine/GameObject/Camera.h"
 #include <cglm/cglm.h>
 
 int main() {
@@ -20,11 +22,6 @@ int main() {
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
-    vec3 up = {0, 1, 0};
-
-    vec4* cam = createCameraMatrix(eye, center, up);
-
-
 
     static GLfloat g_vertex_buffer_data[] = {
             -1.0f, -1.0f, 0.0f,
@@ -62,13 +59,12 @@ int main() {
     Entity* entity = newEntity(mesh);
 
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
+    Camera* camera = newCamera(eye, center, (vec3) AXIS_Y);
 
     do {
-        prepareRenderer(renderer, program);
+        prepareRenderer(renderer, program, camera);
 
         useProgram(program);
-            loadMatrix(program, cam, "View");
-
             renderEntity(renderer, entity, program);
         stopProgram(program);
 
@@ -81,14 +77,13 @@ int main() {
     shaderProgramCleanup(program);
     free(shaders);
 
-    freeMatrixVector(cam);
-
     deleteMesh(mesh);
     entity->mesh = NULL;
 
     entityCleanup(entity);
 
     rendererCleanup(renderer);
+    cameraCleanup(camera);
 
     return 0;
 }

@@ -16,6 +16,6 @@ typedef struct {
 
 Camera* newCamera(vec3 position, vec3 lookAt, vec3 up);
 void updateView(Camera* camera);
-void cameraCleanup();
+void cameraCleanup(Camera* camera);
 
 #endif //ENGINE_CAMERA_H
