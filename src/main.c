@@ -86,7 +86,12 @@ int main() {
     freeMatrixVector(cam);
     freeMatrixVector(mvp);
 
+    deleteMesh(mesh);
+    entity->mesh = NULL;
+
     entityCleanup(entity);
+
+
 
     return 0;
 }

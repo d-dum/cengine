@@ -27,7 +27,6 @@ void enTranslate(Entity* entity, vec3 transform){
 }
 
 void entityCleanup(Entity* entity){
-    deleteMesh(entity->mesh);
     freeMatrixVector(entity->mvp);
     free(entity);
 }
