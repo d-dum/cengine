@@ -8,10 +8,16 @@
 #include "engine/Core/ShaderProgram.h"
 #include "engine/Core/MeshLoader.h"
 #include "engine/Core/Renderer.h"
+#include "engine/Utils/Mat.h"
+#include <cglm/cglm.h>
 
 int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
+
+    vec4* proj = createPerspectiveMatrix(45.f, 1024, 768, 0.1f, 100.f);
+    printMatrix(proj);
+
 
     static GLfloat g_vertex_buffer_data[] = {
             -1.0f, -1.0f, 0.0f,
@@ -58,13 +64,15 @@ int main() {
         stopProgram(program);
 
         update(manager);
-    }while(isCloseRequested(manager) == 0);
+    } while(isCloseRequested(manager) == 0);
 
     dmCleanup(manager);
 
     // Contains shader cleanup
     shaderProgramCleanup(program);
     free(shaders);
+
+    freeMatrixVector(proj);
 
     deleteMesh(mesh);
 
