@@ -11,6 +11,7 @@
 #include "engine/GameObject/Entity.h"
 #include "engine/Utils/Misc.h"
 #include "engine/GameObject/Camera.h"
+#include "engine/Utils/Primitives.h"
 #include <cglm/cglm.h>
 
 int main() {
@@ -19,12 +20,6 @@ int main() {
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
-
-    static GLfloat g_vertex_buffer_data[] = {
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            0.0f,  1.0f, 0.0f,
-    };
 
     Shader* vertex = newShader("../res/shaders/vert.glsl", GL_VERTEX_SHADER);
     Shader* fragment = newShader("../res/shaders/frag.glsl", GL_FRAGMENT_SHADER);
@@ -52,7 +47,7 @@ int main() {
 
     fflush(stdout);
 
-    Mesh* mesh = loadMesh(g_vertex_buffer_data, sizeof(g_vertex_buffer_data));
+    Mesh* mesh = loadMesh(Cube, sizeof(Cube));
     Entity* entity = newEntity(mesh);
 
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
