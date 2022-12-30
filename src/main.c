@@ -49,6 +49,8 @@ int main() {
 
     Mesh* mesh = loadMesh(Cube, sizeof(Cube));
     Entity* entity = newEntity(mesh);
+    Entity* entity1 = newEntity(mesh);
+    enTranslate(entity, (float[]){0.5f, 0.5f, 0.f});
 
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
     Camera* camera = newCamera(eye, center, (vec3) AXIS_Y);
@@ -58,6 +60,7 @@ int main() {
 
         useProgram(program);
             renderEntity(renderer, entity, program);
+            renderEntity(renderer, entity1, program);
         stopProgram(program);
 
         update(manager);
@@ -73,6 +76,7 @@ int main() {
     entity->mesh = NULL;
 
     entityCleanup(entity);
+    entityCleanup(entity1);
 
     rendererCleanup(renderer);
     cameraCleanup(camera);
