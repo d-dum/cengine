@@ -18,4 +18,7 @@ Entity* newEntity(Mesh* mesh);
 
 void entityCleanup(Entity* entity);
 
+void enRotate(Entity* entity, float angle, vec3 rotationAxis);
+void enTranslate(Entity* entity, vec3 transform);
+
 #endif //ENGINE_ENTITY_H

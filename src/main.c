@@ -8,7 +8,6 @@
 #include "engine/Core/ShaderProgram.h"
 #include "engine/Core/MeshLoader.h"
 #include "engine/Core/Renderer.h"
-#include "engine/Utils/Mat.h"
 #include "engine/GameObject/Entity.h"
 #include "engine/Utils/Misc.h"
 #include "engine/GameObject/Camera.h"
@@ -17,8 +16,6 @@
 int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
-
-
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};

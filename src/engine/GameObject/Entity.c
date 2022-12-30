@@ -18,11 +18,19 @@ Entity* newEntity(Mesh* mesh){
     return entity;
 }
 
-void enRotate(Entity* entity, float angle, vec3 rotation){
-
+void enRotate(Entity* entity, float angle, vec3 rotationAxis){
+    glm_rotate(entity->mvp, angle, rotationAxis);
 }
 
 void enTranslate(Entity* entity, vec3 transform){
+    glm_translate(entity->mvp, transform);
+}
+
+void enIncreasePosition(float d, vec3 axis){
+
+}
+
+void enIncreaseRotation(float d, vec3 axis){
 
 }
 
