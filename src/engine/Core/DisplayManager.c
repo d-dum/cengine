@@ -44,6 +44,8 @@ DisplayManager* newDisplayManager(int width, int height){
         exit(-1);
     }
     glfwSetInputMode(manager->window, GLFW_STICKY_KEYS, GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     return manager;
 }
 

@@ -32,8 +32,21 @@ void renderMesh(Renderer* renderer, Mesh* mesh){
             0,
             (void*) 0
             );
+    if(mesh->cbo != -1){
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->cbo);
+        glVertexAttribPointer(
+                1,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+                );
+    }
     glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(mesh->dataSize / sizeof(GLfloat)));
     glDisableVertexAttribArray(0);
+    if(mesh->cbo != -1) glDisableVertexAttribArray(1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
