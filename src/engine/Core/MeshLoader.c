@@ -3,6 +3,7 @@
 //
 
 #include "MeshLoader.h"
+
 #include <GL/glew.h>
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@ Mesh* loadMesh(GLfloat* data, long dataSize){
     mesh->vao = vao;
     mesh->vbo = vbo;
     mesh->cbo = -1;
+    mesh->textureID = -1;
     return mesh;
 }
 
@@ -35,6 +37,25 @@ void addCBO(Mesh* mesh, GLfloat* data, long dataSize){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     mesh->cbo = cbo;
+}
+
+void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad){
+    glBindVertexArray(mesh->vao);
+    GLuint textureId;
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)image->width, (GLsizei)image->height,
+                 0, GL_BGR, GL_UNSIGNED_BYTE, image->data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+
+    if(freeAfterLoad){
+        freeBMP(image);
+    }
 }
 
 void deleteMesh(Mesh* mesh){
