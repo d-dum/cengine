@@ -53,7 +53,7 @@ int main() {
     Entity* entity = newEntity(mesh);
     //Entity* entity1 = newEntity(mesh);
     enRotate(entity, 5, (vec3)AXIS_Y);
-    enRotate(entity, -5, (vec3)AXIS_X);
+    //enRotate(entity, -5, (vec3)AXIS_X);
 
 
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
@@ -61,6 +61,8 @@ int main() {
 
     do {
         prepareRenderer(renderer, program, camera);
+
+        enRotate(entity, 0.005f, (vec3)AXIS_Y);
 
         useProgram(program);
             renderEntity(renderer, entity, program);
