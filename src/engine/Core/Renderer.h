@@ -29,7 +29,7 @@ void rendererCleanup(Renderer* renderer);
 
 void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera);
 
-void renderMesh(Renderer* renderer, Mesh* mesh);
+void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram);
 
 void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program);
 

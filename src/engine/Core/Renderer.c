@@ -20,8 +20,16 @@ void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera)
     stopProgram(program);
 }
 
-void renderMesh(Renderer* renderer, Mesh* mesh){
+void renderTexture(Mesh* mesh, ShaderProgram* shaderProgram){
+    GLuint sampler = glGetUniformLocation(shaderProgram->programId, "myTextureSampler");
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(mesh->textureID);
+    glUniform1i((GLint)sampler, 0);
+}
+
+void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
     glBindVertexArray(mesh->vao);
+    if(mesh->uv != -1 && mesh->textureID != -1) renderTexture(mesh, shaderProgram);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
     glVertexAttribPointer(
@@ -43,17 +51,29 @@ void renderMesh(Renderer* renderer, Mesh* mesh){
                 0,
                 (void*) 0
                 );
+    }else if(mesh->uv != -1 && mesh->textureID != -1){
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->uv);
+        glVertexAttribPointer(
+                1,
+                2,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+                );
     }
+
     glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(mesh->dataSize / sizeof(GLfloat)));
     glDisableVertexAttribArray(0);
-    if(mesh->cbo != -1) glDisableVertexAttribArray(1);
+    if(mesh->cbo != -1 || (mesh->uv != -1 && mesh->textureID != -1)) glDisableVertexAttribArray(1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program){
     loadMatrix(program, entity->mvp, "Model");
-    renderMesh(renderer, entity->mesh);
+    renderMesh(renderer, entity->mesh, program);
 }
 
 Renderer* newRenderer(float fov, float height, float width, float near, float far){

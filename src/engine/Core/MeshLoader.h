@@ -14,6 +14,7 @@ typedef struct {
     GLuint vbo;
     GLuint cbo;
     GLuint textureID;
+    GLuint uv;
     long dataSize;
 } Mesh;
 

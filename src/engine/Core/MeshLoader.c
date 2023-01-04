@@ -25,6 +25,7 @@ Mesh* loadMesh(GLfloat* data, long dataSize){
     mesh->vbo = vbo;
     mesh->cbo = -1;
     mesh->textureID = -1;
+    mesh->uv = -1;
     return mesh;
 }
 
@@ -37,6 +38,17 @@ void addCBO(Mesh* mesh, GLfloat* data, long dataSize){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     mesh->cbo = cbo;
+}
+
+void loadUV(Mesh* mesh, GLfloat* data, long dataSize){
+    glBindVertexArray(mesh->vao);
+    GLuint uvBuffer;
+    glGenBuffers(1, &uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+    glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    mesh->uv = uvBuffer;
 }
 
 void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad){
@@ -56,6 +68,7 @@ void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad){
     if(freeAfterLoad){
         freeBMP(image);
     }
+    mesh->textureID = textureId;
 }
 
 void deleteMesh(Mesh* mesh){

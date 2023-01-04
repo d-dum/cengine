@@ -12,11 +12,16 @@
 #include "engine/Utils/Misc.h"
 #include "engine/GameObject/Camera.h"
 #include "engine/Utils/Primitives.h"
+#include "engine/Utils/FileUtils.h"
 #include <cglm/cglm.h>
 
 int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
+
+    BMPImage* text = readBMP("../res/textures/uvtemplate.bmp");
+
+    printf("Image result: width: %d height: %d\n", text->width, text->height);
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
@@ -48,8 +53,8 @@ int main() {
     fflush(stdout);
 
     Mesh* mesh = loadMesh(Cube, sizeof(Cube));
-    addCBO(mesh, CubeGradientColors, sizeof(CubeGradientColors));
-    printf("Mesh colors: %d\n", mesh->cbo);
+//    addCBO(mesh, CubeGradientColors, sizeof(CubeGradientColors));
+    loadBMPTexture(mesh, text, 1);
     Entity* entity = newEntity(mesh);
     enRotate(entity, 5, (vec3)AXIS_Y);
 
