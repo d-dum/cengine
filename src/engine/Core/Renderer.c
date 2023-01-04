@@ -23,7 +23,7 @@ void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera)
 void renderTexture(Mesh* mesh, ShaderProgram* shaderProgram){
     GLuint sampler = glGetUniformLocation(shaderProgram->programId, "myTextureSampler");
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(mesh->textureID);
+    glBindTexture(GL_TEXTURE_2D, mesh->textureID);
     glUniform1i((GLint)sampler, 0);
 }
 
