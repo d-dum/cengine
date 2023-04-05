@@ -54,6 +54,7 @@ int main() {
 
     Mesh* mesh = loadMesh(Cube, sizeof(Cube));
 //    addCBO(mesh, CubeGradientColors, sizeof(CubeGradientColors));
+    loadUV(mesh, CubeUV, sizeof(CubeUV));
     loadBMPTexture(mesh, text, 1);
     Entity* entity = newEntity(mesh);
     enRotate(entity, 5, (vec3)AXIS_Y);

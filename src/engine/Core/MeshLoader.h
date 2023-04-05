@@ -20,6 +20,7 @@ typedef struct {
 
 Mesh* loadMesh(GLfloat* data, long dataLength);
 void addCBO(Mesh* mesh, GLfloat* data, long dataSize);
+void loadUV(Mesh* mesh, GLfloat* data, long dataSize);
 void deleteMesh(Mesh* mesh);
 void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad);
 
