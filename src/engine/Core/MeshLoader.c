@@ -51,24 +51,33 @@ void loadUV(Mesh* mesh, GLfloat* data, long dataSize){
     mesh->uv = uvBuffer;
 }
 
-void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad){
+void loadTextureGeneric(Mesh* mesh, unsigned int width, unsigned int height, unsigned char* pixels){
     glBindVertexArray(mesh->vao);
-    GLuint textureId;
-    glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_2D, textureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)image->width, (GLsizei)image->height,
-                 0, GL_BGR, GL_UNSIGNED_BYTE, image->data);
-
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) width, (GLsizei) height,
+                 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
+    mesh->textureID = textureID;
+}
 
+void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad){
+    loadTextureGeneric(mesh, image->width, image->height, image->data);
     if(freeAfterLoad){
         freeBMP(image);
     }
-    mesh->textureID = textureId;
+}
+
+void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad){
+    loadTextureGeneric(mesh, image->width, image->height, image->data);
+    if(freeAfterLoad){
+        freePNG(image);
+    }
 }
 
 void deleteMesh(Mesh* mesh){

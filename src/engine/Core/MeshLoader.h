@@ -23,5 +23,7 @@ void addCBO(Mesh* mesh, GLfloat* data, long dataSize);
 void loadUV(Mesh* mesh, GLfloat* data, long dataSize);
 void deleteMesh(Mesh* mesh);
 void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad);
+void loadTextureGeneric(Mesh* mesh, unsigned int width, unsigned int height, unsigned char* pixels);
+void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad);
 
 #endif //ENGINE_MESHLOADER_H

@@ -10,13 +10,15 @@ pkg_check_modules(PNG REQUIRED libpng)
 include(CheckLibraryExists)
 
 CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)
+set(CMAKE_BUILD_TYPE Release)
 
 if (HAVE_LIB_M)
     set(EXTRA_LIBS ${EXTRA_LIBS} m)
 endif (HAVE_LIB_M)
 
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fms-extensions")
 
 add_executable(engine_test src/main.c src/engine/Core/DisplayManager.c src/engine/Core/DisplayManager.h src/engine/Core/Shader.c src/engine/Core/Shader.h src/engine/Utils/FileUtils.c src/engine/Utils/FileUtils.h src/engine/Core/ShaderProgram.c src/engine/Core/ShaderProgram.h src/engine/Core/MeshLoader.c src/engine/Core/MeshLoader.h src/engine/Core/Renderer.c src/engine/Core/Renderer.h src/engine/Utils/Mat.c src/engine/Utils/Mat.h src/engine/Utils/Mem.c src/engine/Utils/Mem.h src/engine/GameObject/Entity.c src/engine/GameObject/Entity.h src/engine/GameObject/Camera.c src/engine/GameObject/Camera.h src/engine/Utils/Misc.h src/engine/Utils/Primitives.h src/engine/engine.h)
 target_include_directories(engine_test PUBLIC ${GLFW3_INCLUDE_DIRS})
