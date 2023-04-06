@@ -46,6 +46,8 @@ DisplayManager* newDisplayManager(int width, int height){
     glfwSetInputMode(manager->window, GLFW_STICKY_KEYS, GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    manager->lastTime = glfwGetTime();
+    manager->deltaTime = 0.0;
     return manager;
 }
 
@@ -54,6 +56,9 @@ int isCloseRequested(DisplayManager* manager){
 }
 
 void update(DisplayManager* manager){
+    double currentTime = glfwGetTime();
+    manager->deltaTime = currentTime - manager->lastTime;
+    manager->lastTime = currentTime;
     glfwSwapBuffers(manager->window);
     glfwPollEvents();
 }

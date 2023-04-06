@@ -53,7 +53,6 @@ int main() {
     fflush(stdout);
 
     Mesh* mesh = loadMesh(Cube, sizeof(Cube));
-//    addCBO(mesh, CubeGradientColors, sizeof(CubeGradientColors));
     loadUV(mesh, CubeUV, sizeof(CubeUV));
     loadBMPTexture(mesh, text, 1);
     Entity* entity = newEntity(mesh);
@@ -65,7 +64,7 @@ int main() {
     do {
         prepareRenderer(renderer, program, camera);
 
-        enRotate(entity, 0.005f, (vec3)AXIS_Y);
+        enRotate(entity, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
 
         useProgram(program);
             renderEntity(renderer, entity, program);

@@ -12,6 +12,8 @@ typedef struct {
     int width;
     int height;
     GLFWwindow* window;
+    double lastTime;
+    double deltaTime;
 } DisplayManager;
 
 DisplayManager* newDisplayManager(int width, int height);
