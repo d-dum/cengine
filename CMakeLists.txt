@@ -5,6 +5,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW3 REQUIRED glfw3)
 pkg_check_modules(GLEW REQUIRED glew)
 pkg_check_modules(CGLM REQUIRED cglm)
+pkg_check_modules(PNG REQUIRED libpng)
 
 include(CheckLibraryExists)
 
@@ -21,8 +22,10 @@ add_executable(engine_test src/main.c src/engine/Core/DisplayManager.c src/engin
 target_include_directories(engine_test PUBLIC ${GLFW3_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${GLEW_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${CGLM_INCLUDE_DIRS})
+target_include_directories(engine_test PUBLIC ${PNG_INCLUDE_DIRS})
 target_link_libraries(engine_test PUBLIC ${GLFW3_LIBRARIES})
 target_link_libraries(engine_test PUBLIC ${GLEW_LIBRARIES})
 target_link_libraries(engine_test PUBLIC ${CGLM_LIBRARIES})
+target_link_libraries(engine_test PUBLIC ${PNG_LIBRARIES})
 
 target_link_libraries(engine_test PUBLIC ${EXTRA_LIBS})
