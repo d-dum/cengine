@@ -1,19 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <GL/glew.h>
-
-#include "engine/Core/DisplayManager.h"
-#include "engine/Core/Shader.h"
-#include "engine/Core/ShaderProgram.h"
-#include "engine/Core/MeshLoader.h"
-#include "engine/Core/Renderer.h"
-#include "engine/GameObject/Entity.h"
-#include "engine/Utils/Misc.h"
-#include "engine/GameObject/Camera.h"
-#include "engine/Utils/Primitives.h"
-#include "engine/Utils/FileUtils.h"
-#include <cglm/cglm.h>
+#include "engine/engine.h"
 
 int main() {
 
@@ -26,8 +14,8 @@ int main() {
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
 
-    Shader* vertex = newShader("../res/shaders/vert.glsl", GL_VERTEX_SHADER);
-    Shader* fragment = newShader("../res/shaders/frag.glsl", GL_FRAGMENT_SHADER);
+    Shader* vertex = newShader("../res/shaders/vert.glsl", VERTEX_SHADER);
+    Shader* fragment = newShader("../res/shaders/frag.glsl", FRAGMENT_SHADER);
 
     if(vertex == NULL || fragment == NULL){
         dmCleanup(manager);
