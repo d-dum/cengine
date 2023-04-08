@@ -13,7 +13,7 @@
 
 void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0, 0, 1, 1);
+    glClearColor(0.52f, 0.52f, 0.51f, 1);
     useProgram(program);
     loadMatrix(program, renderer->projection, "Projection");
     loadMatrix(program, camera->view, "View");
@@ -31,6 +31,8 @@ void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
     glBindVertexArray(mesh->vao);
     if(mesh->uv != -1 && mesh->textureID != -1) renderTexture(mesh, shaderProgram);
     glEnableVertexAttribArray(0);
+    if(mesh->ebo != -1)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
     glVertexAttribPointer(
             0,
@@ -63,8 +65,12 @@ void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
                 (void*) 0
                 );
     }
+    if(mesh->ebo != -1){
+        glDrawElements(GL_TRIANGLES, (GLsizei)(mesh->dataSize / sizeof(GLuint)), GL_UNSIGNED_INT, NULL);
+    }else{
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(mesh->dataSize / sizeof(GLfloat)));
+    }
 
-    glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(mesh->dataSize / sizeof(GLfloat)));
     glDisableVertexAttribArray(0);
     if(mesh->cbo != -1 || (mesh->uv != -1 && mesh->textureID != -1)) glDisableVertexAttribArray(1);
     glBindVertexArray(0);

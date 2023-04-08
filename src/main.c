@@ -7,10 +7,10 @@ int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    //BMPImage* text = readBMP("../res/textures/uvtemplate.bmp");
-    PNGImage* flower = readPNG("../res/textures/flower.png");
+    BMPImage* text = readBMP("../res/textures/uvtemplate.bmp");
+    //PNGImage* flower = readPNG("../res/textures/flower.png");
 
-    printf("Image result: width: %d height: %d\n", flower->width, flower->height);
+    printf("Image result: width: %d height: %d\n", text->width, text->height);
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
@@ -41,10 +41,10 @@ int main() {
 
     fflush(stdout);
 
-    Mesh* mesh = loadMesh(Cube, sizeof(Cube));
-    loadUV(mesh, CubeUV, sizeof(CubeUV));
-//    loadBMPTexture(mesh, text, 1);
-    loadPNGTexture(mesh, flower, 1);
+    Mesh* mesh = loadMeshWithIndices(Quad, sizeof(Quad), QuadIndices, sizeof(QuadIndices));
+    loadUV(mesh, QuadUV, sizeof(QuadUV));
+    loadBMPTexture(mesh, text, 1);
+    //loadPNGTexture(mesh, text, 1);
     Entity* entity = newEntity(mesh);
     enRotate(entity, 5, (vec3)AXIS_Y);
 

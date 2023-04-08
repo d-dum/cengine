@@ -16,6 +16,7 @@ typedef struct {
     GLuint textureID;
     GLuint uv;
     long dataSize;
+    GLuint ebo;
 } Mesh;
 
 Mesh* loadMesh(GLfloat* data, long dataLength);
@@ -25,5 +26,6 @@ void deleteMesh(Mesh* mesh);
 void loadBMPTexture(Mesh* mesh, BMPImage* image, char freeAfterLoad);
 void loadTextureGeneric(Mesh* mesh, unsigned int width, unsigned int height, unsigned char* pixels);
 void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad);
+Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long indicesSize);
 
 #endif //ENGINE_MESHLOADER_H

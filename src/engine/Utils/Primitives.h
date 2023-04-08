@@ -125,4 +125,23 @@ static GLfloat CubeUV[] = {
         0.0f, 1.0f
 };
 
+static GLfloat Quad[] = {
+        -0.5f, 0.5f, 0.f,
+        -0.5f, -0.5f, 0.f,
+        0.5f, -0.5f, 0.f,
+        0.5f, 0.5f, 0.f,
+};
+
+static GLuint QuadIndices[] = {
+        0, 1, 3,
+        3, 1, 2
+};
+
+static GLfloat QuadUV[] = {
+        0.f, 0.f,
+        1.f, 0.f,
+        1.f, 1.f,
+        0.f, 1.f
+};
+
 #endif //ENGINE_PRIMITIVES_H

@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include <stdlib.h>
+#include "../../../lib/fast_obj/fast_obj.h"
 
 Mesh* loadMesh(GLfloat* data, long dataSize){
     GLuint vao;
@@ -26,7 +27,49 @@ Mesh* loadMesh(GLfloat* data, long dataSize){
     mesh->cbo = -1;
     mesh->textureID = -1;
     mesh->uv = -1;
+    mesh->ebo = -1;
     return mesh;
+}
+
+Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long indicesSize){
+    GLuint vao, vbo, ebo;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    Mesh* mesh = (Mesh*) calloc(1, sizeof(Mesh));
+    mesh->vao = vao;
+    mesh->vbo = vbo;
+    mesh->ebo = ebo;
+    mesh->dataSize = indicesSize;
+
+    mesh->cbo = -1;
+    mesh->uv = -1;
+    mesh->textureID = -1;
+    return mesh;
+}
+
+Mesh* loadFromOBJ(char* path){
+    fastObjMesh* mesh = fast_obj_read(path);
+
+    Mesh* ret = (Mesh*) malloc(sizeof(Mesh));
+
+
+
+    fast_obj_destroy(mesh);
+
+    return ret;
 }
 
 void addCBO(Mesh* mesh, GLfloat* data, long dataSize){

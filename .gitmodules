@@ -1,3 +1,6 @@
 [submodule "lib/fast_obj"]
 	path = lib/fast_obj
 	url = git@github.com:thisistherk/fast_obj.git
+[submodule "lib/SOIL2"]
+	path = lib/SOIL2
+	url = git@github.com:SpartanJ/SOIL2.git
