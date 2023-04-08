@@ -4,3 +4,6 @@
 [submodule "lib/SOIL2"]
 	path = lib/SOIL2
 	url = git@github.com:SpartanJ/SOIL2.git
+[submodule "lib/cglm"]
+	path = lib/cglm
+	url = git@github.com:recp/cglm.git

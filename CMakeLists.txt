@@ -4,7 +4,7 @@ project(engine C)
 find_package(PkgConfig REQUIRED)
 add_subdirectory(lib/glfw)
 pkg_check_modules(GLEW REQUIRED glew)
-pkg_check_modules(CGLM REQUIRED cglm)
+add_subdirectory(lib/cglm)
 pkg_check_modules(PNG REQUIRED libpng)
 
 include(CheckLibraryExists)
