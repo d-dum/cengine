@@ -5,7 +5,7 @@ find_package(PkgConfig REQUIRED)
 add_subdirectory(lib/glfw)
 pkg_check_modules(GLEW REQUIRED glew)
 add_subdirectory(lib/cglm)
-pkg_check_modules(PNG REQUIRED libpng)
+add_subdirectory(lib/libpng)
 
 include(CheckLibraryExists)
 
