@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project(engine C)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLFW3 REQUIRED glfw3)
+add_subdirectory(lib/glfw)
 pkg_check_modules(GLEW REQUIRED glew)
 pkg_check_modules(CGLM REQUIRED cglm)
 pkg_check_modules(PNG REQUIRED libpng)
