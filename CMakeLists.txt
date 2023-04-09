@@ -10,7 +10,6 @@ add_subdirectory(lib/libpng)
 include(CheckLibraryExists)
 
 CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)
-set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory(lib/fast_obj)
 add_subdirectory(lib/SOIL2)

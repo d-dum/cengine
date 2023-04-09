@@ -60,14 +60,42 @@ Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long in
     return mesh;
 }
 
-Mesh* loadFromOBJ(char* path){
+Mesh* loadFromOBJ(char* path, char hasUvs){
     fastObjMesh* mesh = fast_obj_read(path);
 
-    Mesh* ret = (Mesh*) malloc(sizeof(Mesh));
+    GLfloat* sortedUvs = (GLfloat*) calloc(mesh->index_count * 2, sizeof(GLfloat));
+    GLuint* indices = (GLuint*) calloc(mesh->index_count, sizeof(GLuint));
 
+    for(unsigned int i = 0; i < mesh->face_count; i++){
+        unsigned int v0 = mesh->indices[i * 3 + 0].p;
+        unsigned int v1 = mesh->indices[i * 3 + 1].p;
+        unsigned int v2 = mesh->indices[i * 3 + 2].p;
 
+        unsigned int uv0 = mesh->indices[i * 3 + 0].t;
+        unsigned int uv1 = mesh->indices[i * 3 + 1].t;
+        unsigned int uv2 = mesh->indices[i * 3 + 2].t;
+
+        sortedUvs[i * 6 + 0] = mesh->texcoords[uv0 * 2 + 0];
+        sortedUvs[i * 6 + 1] = mesh->texcoords[uv0 * 2 + 1];
+        sortedUvs[i * 6 + 2] = mesh->texcoords[uv1 * 2 + 0];
+        sortedUvs[i * 6 + 3] = mesh->texcoords[uv1 * 2 + 1];
+        sortedUvs[i * 6 + 4] = mesh->texcoords[uv2 * 2 + 0];
+        sortedUvs[i * 6 + 5] = mesh->texcoords[uv2 * 2 + 1];
+
+        indices[i*3+0] = v0;
+        indices[i*3+1] = v1;
+        indices[i*3+2] = v2;
+    }
+
+    Mesh* ret = loadMeshWithIndices(mesh->positions, mesh->position_count * sizeof(float), indices, mesh->index_count * sizeof(GLuint));
+
+    if(hasUvs){
+        loadUV(ret, sortedUvs, mesh->index_count*2*sizeof(GLfloat));
+    }
 
     fast_obj_destroy(mesh);
+    free(sortedUvs);
+    free(indices);
 
     return ret;
 }
