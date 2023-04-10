@@ -2,7 +2,7 @@
 Cengine is my attempt to write working renderer (or something more) in c language
 
 ## Running
-to run this example (for linux) tou need cmake glfw3 glew libPNG and [cglm](https://github.com/recp/cglm) installed
+to run this example (for linux) tou need cmake and glew installed, other dependencies are shipped as submodules in lib/
 
 ```` bash
 git clone --recursive https://github.com/d-dum/cengine.git
