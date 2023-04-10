@@ -73,8 +73,10 @@ void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
 
     glDisableVertexAttribArray(0);
     if(mesh->cbo != -1 || (mesh->uv != -1 && mesh->textureID != -1)) glDisableVertexAttribArray(1);
-    glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if(mesh->ebo != -1) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
 }
 
 void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program){

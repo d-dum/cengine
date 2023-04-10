@@ -65,7 +65,7 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     fastObjMesh* mesh = fast_obj_read(path);
 
     GLfloat* sortedUvs = (GLfloat*) calloc(mesh->index_count * 2, sizeof(GLfloat));
-    GLuint* indices = (GLuint*) calloc(mesh->index_count, sizeof(GLuint));
+    GLuint* indices;
 
     for(unsigned int i = 0; i < mesh->face_count; i++){
         unsigned int uv0 = mesh->indices[i * 3 + 0].t;
@@ -81,15 +81,42 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     }
     printf("Face count: %d\n", mesh->face_count);
     printf("Index count: %d\n", mesh->index_count);
-    for(size_t i = 0; i < mesh->index_count; i++){
-        indices[i] = mesh->indices[i].p;
+
+    long indicesSize = 0;
+
+    if(mesh->index_count / mesh->face_count == 3){
+        indices = (GLuint*) calloc(mesh->index_count, sizeof(GLuint));
+        indicesSize = mesh->index_count * sizeof(GLuint);
+        for(size_t i = 0; i < mesh->index_count; i++){
+            indices[i] = mesh->indices[i].p;
+            printf("Ind: %d\n", indices[i]);
+        }
+    }else{
+        indices = (GLuint*) calloc(mesh->face_count * 6, sizeof(GLuint));
+        GLuint* buf = calloc(4, sizeof(GLuint));
+        indicesSize = mesh->face_count * 6 * sizeof(GLuint);
+        size_t inx = 0;
+        for(size_t i = 0; i < mesh->face_count; i++){
+            for(size_t j = 0; j < 4; j++){
+                buf[j] = mesh->indices[i*4+j].p;
+            }
+            indices[inx++] = buf[0];
+            indices[inx++] = buf[1];
+            indices[inx++] = buf[2];
+
+            indices[inx++] = buf[0];
+            indices[inx++] = buf[2];
+            indices[inx++] = buf[3];
+        }
+        free(buf);
     }
 
-    Mesh* ret = loadMeshWithIndices(mesh->positions, mesh->position_count * sizeof(float) * 3, indices, mesh->index_count * sizeof(GLuint));
+
+    Mesh* ret = loadMeshWithIndices(mesh->positions, (mesh->position_count) * sizeof(float) * 3, indices, indicesSize);
 
     printf("Indices size: %ld\n", ret->dataSize / sizeof(GLuint));
     printf("Position count: %d\n", mesh->position_count);
-    for(int i = 0; i < mesh->position_count*3; i++){
+    for(int i = 3; i < mesh->position_count*3; i++){
         printf("Pos: %f\n", mesh->positions[i]);
     }
 

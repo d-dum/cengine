@@ -144,4 +144,16 @@ static GLfloat QuadUV[] = {
         0.f, 1.f
 };
 
+static GLfloat CubeIndexedUV[] = {
+        1.f, 1.f, -1.f,
+        1.f, -1.f, -1.f,
+        1.f, 1.f, 1.f,
+        1.f, -1.f, 1.f,
+        -1.f, 1.f, -1.f,
+        -1.f, -1.f, -1.f,
+        -1.f, 1.f, 1.f,
+        -1.f, -1.f, 1.f
+};
+
+
 #endif //ENGINE_PRIMITIVES_H
