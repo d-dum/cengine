@@ -179,6 +179,10 @@ void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad){
     }
 }
 
+void loadAnyTexture(Mesh* mesh, char* path){
+
+}
+
 void deleteMesh(Mesh* mesh){
     glDeleteBuffers(1, &mesh->vbo);
     glDeleteBuffers(1, &mesh->cbo);
