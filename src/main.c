@@ -7,8 +7,8 @@ int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    BMPImage* text = readBMP("../res/textures/uvtemplate.bmp");
-    PNGImage* texture = readPNG("../res/textures/stallTexture.png");
+    BMPImage* text = readBMP("../res/textures/stallTexture.bmp");
+//    PNGImage* texture = readPNGNew("../res/textures/stallTexture.png");
 
     printf("Image result: width: %d height: %d\n", text->width, text->height);
 
@@ -41,7 +41,8 @@ int main() {
 
     Mesh* mesh = loadFromOBJ("../res/models/stall.obj", 1);
     //loadBMPTexture(mesh, text, 0);
-    loadPNGTexture(mesh, texture, 1);
+//    loadPNGTexture(mesh, texture, 1);
+    loadBMPTexture(mesh, text, 0);
     Entity* ent = newEntity(mesh);
 
     enScale(ent, (vec3){0.1, 0.1, 0.1});

@@ -9,6 +9,9 @@
 
 #include <png.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 char* readFile(char* path){
     FILE* f = fopen(path, "r");
     if(f == NULL){
@@ -152,6 +155,25 @@ PNGImage* readPNG(char* path){
     fclose(file);
 
     return image;
+}
+
+PNGImage* readPNGNew(char* path){
+    int width, height, channels;
+
+    PNGImage* img = (PNGImage*) malloc(sizeof(PNGImage));
+
+    img->data = stbi_load(path, &width, &height, &channels, 0);
+
+    if(!img->data){
+        free(img);
+        return NULL;
+    }
+
+    img->imageSize = width * height * channels;
+    img->height = height;
+    img->width = width;
+
+    return img;
 }
 
 void freePNG(PNGImage* image){
