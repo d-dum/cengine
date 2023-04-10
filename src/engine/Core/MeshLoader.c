@@ -89,7 +89,6 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
         indicesSize = mesh->index_count * sizeof(GLuint);
         for(size_t i = 0; i < mesh->index_count; i++){
             indices[i] = mesh->indices[i].p;
-            printf("Ind: %d\n", indices[i]);
         }
     }else{
         indices = (GLuint*) calloc(mesh->face_count * 6, sizeof(GLuint));
@@ -116,9 +115,7 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
 
     printf("Indices size: %ld\n", ret->dataSize / sizeof(GLuint));
     printf("Position count: %d\n", mesh->position_count);
-    for(int i = 3; i < mesh->position_count*3; i++){
-        printf("Pos: %f\n", mesh->positions[i]);
-    }
+
 
     if(hasUvs){
         loadUV(ret, sortedUvs, mesh->index_count*2*sizeof(GLfloat));

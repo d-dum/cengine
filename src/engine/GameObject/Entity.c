@@ -26,6 +26,10 @@ void enTranslate(Entity* entity, vec3 transform){
     glm_translate(entity->mvp, transform);
 }
 
+void enScale(Entity* entity, vec3 scale){
+    glm_scale(entity->mvp, scale);
+}
+
 void enIncreasePosition(float d, vec3 axis){
 
 }

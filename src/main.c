@@ -8,7 +8,6 @@ int main() {
     DisplayManager* manager = newDisplayManager(1024, 768);
 
     BMPImage* text = readBMP("../res/textures/uvtemplate.bmp");
-    //PNGImage* flower = readPNG("../res/textures/flower.png");
 
     printf("Image result: width: %d height: %d\n", text->width, text->height);
 
@@ -39,14 +38,6 @@ int main() {
         return -1;
     }
 
-
-
-//    Mesh* mesh = loadMeshWithIndices(Quad, sizeof(Quad), QuadIndices, sizeof(QuadIndices));
-//    loadUV(mesh, QuadUV, sizeof(QuadUV));
-//    loadBMPTexture(mesh, text, 1);
-    //loadPNGTexture(mesh, text, 1);
-//    Entity* entity = newEntity(mesh);
-//    enRotate(entity, 5, (vec3)AXIS_Y);
     Mesh* mesh = loadFromOBJ("../res/models/untitled.obj", 0);
     Entity* ent = newEntity(mesh);
 
@@ -62,7 +53,6 @@ int main() {
         enRotate(ent, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
 
         useProgram(program);
-//            renderEntity(renderer, entity, program);
             renderEntity(renderer, ent, program);
         stopProgram(program);
 
@@ -76,10 +66,6 @@ int main() {
     shaderProgramCleanup(program);
     free(shaders);
 
-//    deleteMesh(mesh);
-//    entity->mesh = NULL;
-//
-//    entityCleanup(entity);
     deleteMesh(mesh);
     ent->mesh = NULL;
     entityCleanup(ent);

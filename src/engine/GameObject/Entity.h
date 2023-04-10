@@ -20,5 +20,6 @@ void entityCleanup(Entity* entity);
 
 void enRotate(Entity* entity, float angle, vec3 rotationAxis);
 void enTranslate(Entity* entity, vec3 transform);
+void enScale(Entity* entity, vec3 scale);
 
 #endif //ENGINE_ENTITY_H
