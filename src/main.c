@@ -38,10 +38,11 @@ int main() {
         return -1;
     }
 
-    Mesh* mesh = loadFromOBJ("../res/models/untitled.obj", 0);
+    Mesh* mesh = loadFromOBJ("../res/models/untitled.obj", 1);
+    loadBMPTexture(mesh, text, 0);
     Entity* ent = newEntity(mesh);
 
-    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d", mesh->vao, mesh->vbo, mesh->ebo);
+    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv);
 
     fflush(stdout);
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
