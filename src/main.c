@@ -39,40 +39,50 @@ int main() {
         return -1;
     }
 
-    fflush(stdout);
 
-    Mesh* mesh = loadMeshWithIndices(Quad, sizeof(Quad), QuadIndices, sizeof(QuadIndices));
-    loadUV(mesh, QuadUV, sizeof(QuadUV));
-    loadBMPTexture(mesh, text, 1);
+
+//    Mesh* mesh = loadMeshWithIndices(Quad, sizeof(Quad), QuadIndices, sizeof(QuadIndices));
+//    loadUV(mesh, QuadUV, sizeof(QuadUV));
+//    loadBMPTexture(mesh, text, 1);
     //loadPNGTexture(mesh, text, 1);
-    Entity* entity = newEntity(mesh);
-    enRotate(entity, 5, (vec3)AXIS_Y);
+//    Entity* entity = newEntity(mesh);
+//    enRotate(entity, 5, (vec3)AXIS_Y);
+    Mesh* mesh = loadFromOBJ("../res/models/untitled.obj", 0);
+    Entity* ent = newEntity(mesh);
 
+    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d", mesh->vao, mesh->vbo, mesh->ebo);
+
+    fflush(stdout);
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
     Camera* camera = newCamera(eye, center, (vec3) AXIS_Y);
 
     do {
         prepareRenderer(renderer, program, camera);
 
-        enRotate(entity, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
+        enRotate(ent, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
 
         useProgram(program);
-            renderEntity(renderer, entity, program);
+//            renderEntity(renderer, entity, program);
+            renderEntity(renderer, ent, program);
         stopProgram(program);
 
         update(manager);
     } while(isCloseRequested(manager) == 0);
 
     dmCleanup(manager);
+    freeBMP(text);
 
     // Contains shader cleanup
     shaderProgramCleanup(program);
     free(shaders);
 
+//    deleteMesh(mesh);
+//    entity->mesh = NULL;
+//
+//    entityCleanup(entity);
     deleteMesh(mesh);
-    entity->mesh = NULL;
-
-    entityCleanup(entity);
+    ent->mesh = NULL;
+    entityCleanup(ent);
 
     rendererCleanup(renderer);
     cameraCleanup(camera);

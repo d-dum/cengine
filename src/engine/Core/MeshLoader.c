@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "../../../lib/fast_obj/fast_obj.h"
 
 Mesh* loadMesh(GLfloat* data, long dataSize){
@@ -67,10 +68,6 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     GLuint* indices = (GLuint*) calloc(mesh->index_count, sizeof(GLuint));
 
     for(unsigned int i = 0; i < mesh->face_count; i++){
-        unsigned int v0 = mesh->indices[i * 3 + 0].p;
-        unsigned int v1 = mesh->indices[i * 3 + 1].p;
-        unsigned int v2 = mesh->indices[i * 3 + 2].p;
-
         unsigned int uv0 = mesh->indices[i * 3 + 0].t;
         unsigned int uv1 = mesh->indices[i * 3 + 1].t;
         unsigned int uv2 = mesh->indices[i * 3 + 2].t;
@@ -81,13 +78,20 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
         sortedUvs[i * 6 + 3] = mesh->texcoords[uv1 * 2 + 1];
         sortedUvs[i * 6 + 4] = mesh->texcoords[uv2 * 2 + 0];
         sortedUvs[i * 6 + 5] = mesh->texcoords[uv2 * 2 + 1];
-
-        indices[i*3+0] = v0;
-        indices[i*3+1] = v1;
-        indices[i*3+2] = v2;
+    }
+    printf("Face count: %d\n", mesh->face_count);
+    printf("Index count: %d\n", mesh->index_count);
+    for(size_t i = 0; i < mesh->index_count; i++){
+        indices[i] = mesh->indices[i].p;
     }
 
-    Mesh* ret = loadMeshWithIndices(mesh->positions, mesh->position_count * sizeof(float), indices, mesh->index_count * sizeof(GLuint));
+    Mesh* ret = loadMeshWithIndices(mesh->positions, mesh->position_count * sizeof(float) * 3, indices, mesh->index_count * sizeof(GLuint));
+
+    printf("Indices size: %ld\n", ret->dataSize / sizeof(GLuint));
+    printf("Position count: %d\n", mesh->position_count);
+    for(int i = 0; i < mesh->position_count*3; i++){
+        printf("Pos: %f\n", mesh->positions[i]);
+    }
 
     if(hasUvs){
         loadUV(ret, sortedUvs, mesh->index_count*2*sizeof(GLfloat));
