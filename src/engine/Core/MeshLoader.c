@@ -71,29 +71,17 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
 
     char first = 1;
 
+    unsigned int inx = 0;
+
     for(unsigned int i = 0; i < mesh->face_count; i++){
-        unsigned int uv0 = mesh->indices[i * 3 + 0].t;
-        unsigned int uv1 = mesh->indices[i * 3 + 1].t;
-        unsigned int uv2 = mesh->indices[i * 3 + 2].t;
+        unsigned int uvIndex = mesh->indices[i].t;
+        float uv1 = mesh->texcoords[uvIndex];
+        float uv2 = mesh->texcoords[uvIndex + 1];
 
-        if(first){
-            first = 0;
-            prev0 = uv0;
-            prev1 = uv1;
-        }else{
-            if(prev0 != uv0 || prev1 != uv1){
-                printf("FAIL: CUR( %d %d ), PREV( %d %d )\n", uv0, uv1, prev0, prev1);
-            }
-            prev0 = uv0;
-            prev1 = uv1;
-        }
+        sortedUvs[inx++] = uv1;
+        sortedUvs[inx++] = uv2;
 
-        sortedUvs[i * 6 + 0] = mesh->texcoords[uv0 * 2 + 0];
-        sortedUvs[i * 6 + 1] = mesh->texcoords[uv0 * 2 + 1];
-        sortedUvs[i * 6 + 2] = mesh->texcoords[uv1 * 2 + 0];
-        sortedUvs[i * 6 + 3] = mesh->texcoords[uv1 * 2 + 1];
-        sortedUvs[i * 6 + 4] = mesh->texcoords[uv2 * 2 + 0];
-        sortedUvs[i * 6 + 5] = mesh->texcoords[uv2 * 2 + 1];
+        printf("UVS: %f %f\n", uv1, uv2);
     }
 
 //    for(int i = 0; i < mesh->index_count*2; i++){
