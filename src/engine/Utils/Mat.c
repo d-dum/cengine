@@ -4,7 +4,7 @@
 
 #include "Mat.h"
 
-#include <cglm/cglm.h>
+#include "../../../lib/cglm/include/cglm/cglm.h"
 #include <GL/glew.h>
 
 #include "Mem.h"

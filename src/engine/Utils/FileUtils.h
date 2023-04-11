@@ -23,8 +23,7 @@ typedef struct{
 char* readFile(char* path);
 BMPImage* readBMP(char* path);
 void freeBMP(BMPImage* image);
-PNGImage* readPNG(char* path);
 void freePNG(PNGImage* image);
-PNGImage* readPNGNew(char* path);
+PNGImage* readPNG(char* path);
 
 #endif //ENGINE_FILEUTILS_H

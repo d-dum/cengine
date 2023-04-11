@@ -6,7 +6,7 @@
 #define ENGINE_DISPLAYMANAGER_H
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "../../../lib/glfw/include/GLFW/glfw3.h"
 
 typedef struct {
     int width;

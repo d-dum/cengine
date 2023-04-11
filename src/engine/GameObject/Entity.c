@@ -8,8 +8,6 @@
 #include "../Utils/Mat.h"
 #include <stdlib.h>
 
-#include <cglm/cglm.h>
-
 Entity* newEntity(Mesh* mesh){
     Entity* entity = (Entity*) malloc(sizeof(Entity));
     entity->mesh = mesh;

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "../../../lib/glfw/include/GLFW/glfw3.h"
 
 DisplayManager* newDisplayManager(int width, int height){
 

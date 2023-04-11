@@ -10,7 +10,7 @@
 #include "../GameObject/Camera.h"
 #include "../GameObject/Entity.h"
 
-#include <cglm/cglm.h>
+#include "../../../lib/cglm/include/cglm/cglm.h"
 
 typedef struct {
     vec4* projection;

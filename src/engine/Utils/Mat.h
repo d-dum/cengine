@@ -5,7 +5,7 @@
 #ifndef ENGINE_MAT_H
 #define ENGINE_MAT_H
 
-#include <cglm/cglm.h>
+#include "../../../lib/cglm/include/cglm/cglm.h"
 
 vec4* createMVPMatrix();
 void printMatrix(vec4* mat);

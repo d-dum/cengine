@@ -67,10 +67,26 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     GLfloat* sortedUvs = (GLfloat*) calloc(mesh->index_count * 2, sizeof(GLfloat));
     GLuint* indices;
 
+    unsigned int prev0 = 0, prev1 = 0;
+
+    char first = 1;
+
     for(unsigned int i = 0; i < mesh->face_count; i++){
         unsigned int uv0 = mesh->indices[i * 3 + 0].t;
         unsigned int uv1 = mesh->indices[i * 3 + 1].t;
         unsigned int uv2 = mesh->indices[i * 3 + 2].t;
+
+        if(first){
+            first = 0;
+            prev0 = uv0;
+            prev1 = uv1;
+        }else{
+            if(prev0 != uv0 || prev1 != uv1){
+                printf("FAIL: CUR( %d %d ), PREV( %d %d )\n", uv0, uv1, prev0, prev1);
+            }
+            prev0 = uv0;
+            prev1 = uv1;
+        }
 
         sortedUvs[i * 6 + 0] = mesh->texcoords[uv0 * 2 + 0];
         sortedUvs[i * 6 + 1] = mesh->texcoords[uv0 * 2 + 1];
@@ -79,6 +95,10 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
         sortedUvs[i * 6 + 4] = mesh->texcoords[uv2 * 2 + 0];
         sortedUvs[i * 6 + 5] = mesh->texcoords[uv2 * 2 + 1];
     }
+
+//    for(int i = 0; i < mesh->index_count*2; i++){
+//        printf("UV: %f", sortedUvs[i]);
+//    }
     printf("Face count: %d\n", mesh->face_count);
     printf("Index count: %d\n", mesh->index_count);
 
@@ -127,6 +147,7 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
 
     return ret;
 }
+
 
 void addCBO(Mesh* mesh, GLfloat* data, long dataSize){
     glBindVertexArray(mesh->vao);

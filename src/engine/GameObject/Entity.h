@@ -7,7 +7,7 @@
 
 #include "../Core/MeshLoader.h"
 
-#include <cglm/cglm.h>
+#include "../../../lib/cglm/include/cglm/cglm.h"
 
 typedef struct {
     Mesh* mesh;
