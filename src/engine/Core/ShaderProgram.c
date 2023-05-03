@@ -9,7 +9,6 @@
 #include <GL/glew.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cglm/cglm.h>
 
 ShaderProgram* newShaderProgram(Shader** shaders, long shaderArrayLength){
     GLuint programID = glCreateProgram();

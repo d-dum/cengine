@@ -5,7 +5,7 @@
 #ifndef ENGINE_CAMERA_H
 #define ENGINE_CAMERA_H
 
-#include <cglm/cglm.h>
+#include "../../../lib/cglm/include/cglm/cglm.h"
 
 typedef struct {
     vec4* view;
