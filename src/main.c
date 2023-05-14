@@ -7,10 +7,10 @@ int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    BMPImage* text = readBMP("../res/textures/stallTexture.bmp");
-//    PNGImage* texture = readPNGNew("../res/textures/stallTexture.png");
+    //BMPImage* text = readBMP("../res/textures/stallTexture.bmp");
+    //PNGImage* text = readPNG("../res/textures/stallTexture.png");
 
-    printf("Image result: width: %d height: %d\n", text->width, text->height);
+    //printf("Image result: width: %d height: %d\n", text->width, text->height);
 
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
@@ -42,7 +42,8 @@ int main() {
     Mesh* mesh = loadFromOBJ("../res/models/stall.obj", 1);
     //loadBMPTexture(mesh, text, 0);
 //    loadPNGTexture(mesh, texture, 1);
-    loadBMPTexture(mesh, text, 0);
+    //loadPNGTexture(mesh, text, 0);
+    loadAnyTexture(mesh, "../res/textures/stallTexture.png");
     Entity* ent = newEntity(mesh);
 
     enScale(ent, (vec3){0.1, 0.1, 0.1});
@@ -66,7 +67,7 @@ int main() {
     } while(isCloseRequested(manager) == 0);
 
     dmCleanup(manager);
-    freeBMP(text);
+    //freeBMP(text);
 
     // Contains shader cleanup
     shaderProgramCleanup(program);

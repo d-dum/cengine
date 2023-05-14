@@ -28,5 +28,7 @@ void loadTextureGeneric(Mesh* mesh, unsigned int width, unsigned int height, uns
 void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad);
 Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long indicesSize);
 Mesh* loadFromOBJ(char* path, char hasUvs);
+Mesh* loadGLTF(char* path);
+void loadAnyTexture(Mesh* mesh, char* path);
 
 #endif //ENGINE_MESHLOADER_H

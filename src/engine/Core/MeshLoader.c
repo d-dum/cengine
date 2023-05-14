@@ -9,6 +9,12 @@
 #include <stdio.h>
 #include "../../../lib/fast_obj/fast_obj.h"
 
+#define CGLTF_IMPLEMENTATION
+#include "../../../lib/cgltf/cgltf.h"
+
+#include "../Utils/Arr.h"
+#include "../../../lib/SOIL2/src/SOIL2/SOIL2.h"
+
 Mesh* loadMesh(GLfloat* data, long dataSize){
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -74,19 +80,18 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     unsigned int inx = 0;
 
     for(unsigned int i = 0; i < mesh->face_count; i++){
-        unsigned int uvIndex = mesh->indices[i].t;
-        float uv1 = mesh->texcoords[uvIndex];
-        float uv2 = mesh->texcoords[uvIndex + 1];
+        for(unsigned int j = 0; j < 3; j++){
+            unsigned int vertexIndex = mesh->indices[i*3 + j].p;
+            unsigned int uvIndex = mesh->indices[i*3 + j].t;
 
-        sortedUvs[inx++] = uv1;
-        sortedUvs[inx++] = uv2;
+            float uv1 = mesh->texcoords[uvIndex*2];
+            float uv2 = mesh->texcoords[uvIndex*2 + 1];
 
-        printf("UVS: %f %f\n", uv1, uv2);
+            sortedUvs[vertexIndex*2] = uv1;
+            sortedUvs[vertexIndex*2 + 1] = uv2;
+        }
     }
 
-//    for(int i = 0; i < mesh->index_count*2; i++){
-//        printf("UV: %f", sortedUvs[i]);
-//    }
     printf("Face count: %d\n", mesh->face_count);
     printf("Index count: %d\n", mesh->index_count);
 
@@ -126,7 +131,7 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
 
 
     if(hasUvs){
-        loadUV(ret, sortedUvs, mesh->index_count*2*sizeof(GLfloat));
+        loadUV(ret, sortedUvs, mesh->position_count*2*sizeof(GLfloat));
     }
 
     fast_obj_destroy(mesh);
@@ -189,12 +194,69 @@ void loadPNGTexture(Mesh* mesh, PNGImage* image, char freeAfterLoad){
 }
 
 void loadAnyTexture(Mesh* mesh, char* path){
-
+    GLuint tex_2d = SOIL_load_OGL_texture(
+            path,
+            SOIL_LOAD_AUTO,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT | SOIL_FLAG_INVERT_Y
+            );
+    mesh->textureID = tex_2d;
 }
 
 void deleteMesh(Mesh* mesh){
-    glDeleteBuffers(1, &mesh->vbo);
-    glDeleteBuffers(1, &mesh->cbo);
     glDeleteVertexArrays(1, &mesh->vao);
+    glDeleteBuffers(1, &mesh->vbo);
+    if(mesh->ebo != -1)
+        glDeleteBuffers(1, &mesh->ebo);
     free(mesh);
 }
+
+Mesh* loadGLTF(char* path){
+    cgltf_options options = {0};
+    cgltf_data* data = NULL;
+    cgltf_result result = cgltf_parse_file(&options, path, &data);
+    if(result != cgltf_result_success)
+        return NULL;
+
+    result = cgltf_load_buffers(&options, data, path);
+    if(result != cgltf_result_success)
+        return NULL;
+
+    result = cgltf_validate(data);
+    printf("Result: %d\n", result);
+
+    cgltf_mesh* mesh = &data->meshes[0];
+    cgltf_primitive* prim = &mesh->primitives[0];
+
+// Extract vertex positions
+
+    cgltf_accessor* pos_accessor = prim->attributes[0].data;
+    cgltf_size pos_count = pos_accessor->count;
+    float* positions = malloc(pos_count * sizeof(float));
+    cgltf_accessor_read_float(pos_accessor, 0, positions, pos_count * 3);
+
+// Extract indices
+
+    cgltf_accessor* index_accessor = prim->indices;
+    cgltf_size index_count = index_accessor->count;
+    uint32_t* indices = malloc(pos_count * sizeof(uint32_t));
+    cgltf_accessor_read_uint(index_accessor, 0, indices, index_count);
+
+// Extract UV coordinates
+
+    cgltf_accessor* uv_accessor = prim->attributes[1].data;
+    cgltf_size uv_count = uv_accessor->count;
+    float* uvs = malloc(uv_count * sizeof(float));
+    cgltf_accessor_read_float(uv_accessor, 0, uvs, uv_count * 2);
+
+    Mesh* ret = loadMeshWithIndices(positions, (long)(pos_count * sizeof(float)), indices, (long)(index_count * sizeof(uint32_t)));
+
+    loadUV(ret, uvs, (long)(uv_count * sizeof(float)));
+
+    cgltf_free(data);
+    free(positions);
+    free(indices);
+    free(uvs);
+    return ret;
+}
+

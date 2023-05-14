@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/SOIL2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/cglm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/cgltf" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/fast_obj" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/glfw" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lib/libpng" vcs="Git" />
