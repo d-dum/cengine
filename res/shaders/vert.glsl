@@ -13,6 +13,7 @@ uniform vec3 lightPosition;
 out vec2 UV;
 out vec3 surfaceNormal;
 out vec3 toLightVector;
+out vec3 toCameraVector;
 
 void main(){
     vec4 worldPosition = Model * vec4(vertexPosition_modelspace, 1);
@@ -21,4 +22,5 @@ void main(){
     UV = vertexUV;
     surfaceNormal = (Model * vec4(normals, 0.0)).xyz;
     toLightVector = lightPosition - worldPosition.xyz;
+    toCameraVector = (inverse(View) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 }

@@ -18,6 +18,8 @@ typedef struct {
     GLuint nbo;
     long dataSize;
     GLuint ebo;
+    float shineDamper;
+    float reflectivity;
 } Mesh;
 
 Mesh* loadMesh(GLfloat* data, long dataLength);

@@ -64,6 +64,8 @@ Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long in
     mesh->uv = -1;
     mesh->textureID = -1;
     mesh->nbo = -1;
+    mesh->shineDamper = 1.f;
+    mesh->reflectivity = 0.f;
     return mesh;
 }
 

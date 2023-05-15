@@ -103,6 +103,9 @@ void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program, Li
     if(light != NULL){
         loadVec3(program, light->position, "lightPosition");
         loadVec3(program, light->colour, "lightColor");
+
+        loadFloat(program, entity->mesh->reflectivity, "reflectivity");
+        loadFloat(program, entity->mesh->shineDamper, "shineDamper");
     }
 
     renderMesh(renderer, entity->mesh, program);
