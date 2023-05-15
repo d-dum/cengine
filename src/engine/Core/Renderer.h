@@ -9,6 +9,7 @@
 #include "ShaderProgram.h"
 #include "../GameObject/Camera.h"
 #include "../GameObject/Entity.h"
+#include "../GameObject/Light.h"
 
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
@@ -31,6 +32,6 @@ void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera)
 
 void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram);
 
-void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program);
+void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program, Light* light);
 
 #endif //ENGINE_RENDERER_H

@@ -15,6 +15,7 @@ typedef struct {
     GLuint cbo;
     GLuint textureID;
     GLuint uv;
+    GLuint nbo;
     long dataSize;
     GLuint ebo;
 } Mesh;
@@ -30,5 +31,6 @@ Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long in
 Mesh* loadFromOBJ(char* path, char hasUvs);
 Mesh* loadGLTF(char* path);
 void loadAnyTexture(Mesh* mesh, char* path);
+void addNormals(Mesh* mesh, GLfloat* data, long dataSize);
 
 #endif //ENGINE_MESHLOADER_H

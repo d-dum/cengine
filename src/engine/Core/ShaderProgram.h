@@ -20,5 +20,6 @@ void shaderProgramCleanup(ShaderProgram* program);
 void useProgram(ShaderProgram* program);
 void stopProgram(ShaderProgram* program);
 int loadMatrix(ShaderProgram* program, vec4* mat, const GLchar* uniformName);
+int loadVec3(ShaderProgram* program, float* vec, const GLchar* uniformName);
 
 #endif //ENGINE_SHADERPROGRAM_H

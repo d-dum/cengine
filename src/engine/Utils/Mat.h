@@ -7,6 +7,18 @@
 
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
+#ifndef MAT4ALLOC
+
+#define MAT4ALLOC (vec4*)aligned_alloc_custom(16, sizeof(mat4), 0)
+
+#endif
+
+#ifdef VEC3ALLOC
+
+#define VEC3ALLOC (float*)aligned_alloc_custom(16, sizeof(vec3), 0)
+
+#endif
+
 vec4* createMVPMatrix();
 void printMatrix(vec4* mat);
 void freeMatrixVector(void* mat);

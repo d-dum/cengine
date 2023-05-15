@@ -15,5 +15,6 @@
 #include "GameObject/Camera.h"
 #include "Utils/Primitives.h"
 #include "Utils/FileUtils.h"
+#include "GameObject/Light.h"
 
 #endif //ENGINE_ENGINE_H

@@ -56,9 +56,19 @@ void shaderProgramCleanup(ShaderProgram* program){
 int loadMatrix(ShaderProgram* program, vec4* mat, const GLchar* uniformName){
     GLint location = glGetUniformLocation(program->programId, uniformName);
     if(location == -1){
-        fprintf(stderr, "Location of uniform %s not found", uniformName);
+        fprintf(stderr, "Location of uniform %s not found\n", uniformName);
         return 0;
     }
     glUniformMatrix4fv(location, 1, GL_FALSE, mat[0]);
+    return 1;
+}
+
+int loadVec3(ShaderProgram* program, float* vec, const GLchar* uniformName){
+    GLint location = glGetUniformLocation(program->programId, uniformName);
+    if(location == -1){
+        fprintf(stderr, "Location of uniform %s not found\n", uniformName);
+        return 0;
+    }
+    glUniform3fv(location, 1, vec);
     return 1;
 }

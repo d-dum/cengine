@@ -49,7 +49,7 @@ add_executable(engine_test
         src/engine/engine.h
         lib/fast_obj/fast_obj.c
         lib/fast_obj/fast_obj.h
-        lib/cgltf/cgltf.h src/engine/Utils/Arr.c src/engine/Utils/Arr.h)
+        lib/cgltf/cgltf.h src/engine/Utils/Arr.c src/engine/Utils/Arr.h src/engine/GameObject/Light.c src/engine/GameObject/Light.h)
 #target_include_directories(engine_test PUBLIC ${GLFW3_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${GLEW_INCLUDE_DIRS})
 target_include_directories(engine_test PRIVATE cglm)

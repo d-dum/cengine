@@ -7,11 +7,6 @@ int main() {
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    //BMPImage* text = readBMP("../res/textures/stallTexture.bmp");
-    //PNGImage* text = readPNG("../res/textures/stallTexture.png");
-
-    //printf("Image result: width: %d height: %d\n", text->width, text->height);
-
     vec3 eye = {0, 0, -6};
     vec3 center = {0, 0, 0};
 
@@ -40,19 +35,18 @@ int main() {
     }
 
     Mesh* mesh = loadFromOBJ("../res/models/stall.obj", 1);
-    //loadBMPTexture(mesh, text, 0);
-//    loadPNGTexture(mesh, texture, 1);
-    //loadPNGTexture(mesh, text, 0);
     loadAnyTexture(mesh, "../res/textures/stallTexture.png");
     Entity* ent = newEntity(mesh);
 
     enScale(ent, (vec3){0.1, 0.1, 0.1});
 
-    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv);
+    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d, normals: %d\n", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv, mesh->nbo);
 
     fflush(stdout);
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
     Camera* camera = newCamera(eye, center, (vec3) AXIS_Y);
+
+    Light* light = newLight((vec3){0.0f, 1.0f, 1.0f}, (vec3){1.f, 0.f, 0.f});
 
     do {
         prepareRenderer(renderer, program, camera);
@@ -60,7 +54,7 @@ int main() {
         enRotate(ent, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
 
         useProgram(program);
-            renderEntity(renderer, ent, program);
+            renderEntity(renderer, ent, program, light);
         stopProgram(program);
 
         update(manager);
@@ -79,6 +73,7 @@ int main() {
 
     rendererCleanup(renderer);
     cameraCleanup(camera);
+    deleteLight(light);
 
     return 0;
 }

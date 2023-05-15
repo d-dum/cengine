@@ -12,7 +12,6 @@
 #define CGLTF_IMPLEMENTATION
 #include "../../../lib/cgltf/cgltf.h"
 
-#include "../Utils/Arr.h"
 #include "../../../lib/SOIL2/src/SOIL2/SOIL2.h"
 
 Mesh* loadMesh(GLfloat* data, long dataSize){
@@ -64,6 +63,7 @@ Mesh* loadMeshWithIndices(GLfloat* data, long dataSize, GLuint* indices, long in
     mesh->cbo = -1;
     mesh->uv = -1;
     mesh->textureID = -1;
+    mesh->nbo = -1;
     return mesh;
 }
 
@@ -71,6 +71,7 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
     fastObjMesh* mesh = fast_obj_read(path);
 
     GLfloat* sortedUvs = (GLfloat*) calloc(mesh->index_count * 2, sizeof(GLfloat));
+    GLfloat* sortedNormals = (GLfloat*) calloc(mesh->position_count * 3, sizeof(GLfloat));
     GLuint* indices;
 
     unsigned int prev0 = 0, prev1 = 0;
@@ -89,6 +90,21 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
 
             sortedUvs[vertexIndex*2] = uv1;
             sortedUvs[vertexIndex*2 + 1] = uv2;
+        }
+    }
+
+    for(unsigned int i = 0; i < mesh->face_count; i++){
+        for(unsigned int j = 0; j < 3; j++){
+            unsigned int vertexIndex = mesh->indices[i * 3 + j].p;
+            unsigned int normalIndex = mesh->indices[i * 3 + j].n;
+
+            float normal1 = mesh->normals[normalIndex * 3];
+            float normal2 = mesh->normals[normalIndex * 3 + 1];
+            float normal3 = mesh->normals[normalIndex * 3 + 2];
+
+            sortedNormals[vertexIndex * 3] = normal1;
+            sortedNormals[vertexIndex * 3 + 1] = normal2;
+            sortedNormals[vertexIndex * 3 + 2] = normal3;
         }
     }
 
@@ -134,13 +150,27 @@ Mesh* loadFromOBJ(char* path, char hasUvs){
         loadUV(ret, sortedUvs, mesh->position_count*2*sizeof(GLfloat));
     }
 
+    addNormals(ret, sortedNormals, mesh->position_count * 3 * sizeof(GLfloat));
+
     fast_obj_destroy(mesh);
     free(sortedUvs);
     free(indices);
+    free(sortedNormals);
 
     return ret;
 }
 
+void addNormals(Mesh* mesh, GLfloat* data, long dataSize){
+    glBindVertexArray(mesh->vao);
+    GLuint nbo;
+    glGenBuffers(1, &nbo);
+    glBindBuffer(GL_ARRAY_BUFFER, nbo);
+    glBufferData(GL_ARRAY_BUFFER, dataSize, data, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    mesh->nbo = nbo;
+}
 
 void addCBO(Mesh* mesh, GLfloat* data, long dataSize){
     glBindVertexArray(mesh->vao);

@@ -11,6 +11,8 @@
 #include "ShaderProgram.h"
 
 
+
+
 void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.52f, 0.52f, 0.51f, 1);
@@ -65,6 +67,20 @@ void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
                 (void*) 0
                 );
     }
+
+    if(mesh->nbo != -1){
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->nbo);
+        glVertexAttribPointer(
+                2,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+                );
+    }
+
     if(mesh->ebo != -1){
         glDrawElements(GL_TRIANGLES, (GLsizei)(mesh->dataSize / sizeof(GLuint)), GL_UNSIGNED_INT, NULL);
     }else{
@@ -73,14 +89,22 @@ void renderMesh(Renderer* renderer, Mesh* mesh, ShaderProgram* shaderProgram){
 
     glDisableVertexAttribArray(0);
     if(mesh->cbo != -1 || (mesh->uv != -1 && mesh->textureID != -1)) glDisableVertexAttribArray(1);
+    if(mesh->nbo != -1) glDisableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     if(mesh->ebo != -1) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
 }
 
-void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program){
+void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program, Light* light){
+
     loadMatrix(program, entity->mvp, "Model");
+
+    if(light != NULL){
+        loadVec3(program, light->position, "lightPosition");
+        loadVec3(program, light->colour, "lightColor");
+    }
+
     renderMesh(renderer, entity->mesh, program);
 }
 

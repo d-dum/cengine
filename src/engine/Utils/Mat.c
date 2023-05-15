@@ -9,11 +9,7 @@
 
 #include "Mem.h"
 
-#ifndef MAT4ALLOC
 
-#define MAT4ALLOC (vec4*)aligned_alloc_custom(16, sizeof(mat4), 0)
-
-#endif
 
 void freeMatrixVector(void* mat){
     aligned_free(mat);
