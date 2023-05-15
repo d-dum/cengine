@@ -46,7 +46,7 @@ int main() {
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
     Camera* camera = newCamera(eye, center, (vec3) AXIS_Y);
 
-    Light* light = newLight((vec3){0.0f, 1.0f, 1.0f}, (vec3){1.f, 0.f, 0.f});
+    Light* light = newLight((vec3){0.0f, 0.0f, -20.0f}, (vec3){1.f, 1.f, 1.f});
 
     do {
         prepareRenderer(renderer, program, camera);
