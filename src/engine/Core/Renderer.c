@@ -111,6 +111,96 @@ void renderEntity(Renderer* renderer, Entity* entity, ShaderProgram* program, Li
     renderMesh(renderer, entity->mesh, program);
 }
 
+void prepareEntity(Entity* entity, ShaderProgram* program){
+    loadFloat(program, entity->mesh->reflectivity, "reflectivity");
+    loadFloat(program, entity->mesh->shineDamper, "shineDamper");
+
+    Mesh* mesh = entity->mesh;
+
+
+    glBindVertexArray(mesh->vao);
+    if(mesh->uv != -1 && mesh->textureID != -1) renderTexture(mesh, program);
+    glEnableVertexAttribArray(0);
+    if(mesh->ebo != -1)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+    glVertexAttribPointer(
+            0,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            (void*) 0
+    );
+    if(mesh->cbo != -1){
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->cbo);
+        glVertexAttribPointer(
+                1,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+        );
+    }else if(mesh->uv != -1 && mesh->textureID != -1){
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->uv);
+        glVertexAttribPointer(
+                1,
+                2,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+        );
+    }
+
+    if(mesh->nbo != -1){
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->nbo);
+        glVertexAttribPointer(
+                2,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                0,
+                (void*) 0
+        );
+    }
+}
+
+void prepareInstance(Entity* entity, ShaderProgram* program){
+    loadMatrix(program, entity->mvp, "Model");
+}
+
+void unbindEntity(Entity* entity){
+    Mesh* mesh = entity->mesh;
+
+    glDisableVertexAttribArray(0);
+    if(mesh->cbo != -1 || (mesh->uv != -1 && mesh->textureID != -1)) glDisableVertexAttribArray(1);
+    if(mesh->nbo != -1) glDisableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if(mesh->ebo != -1) glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void renderEntities(Renderer* renderer, Entity** entities, ShaderProgram* program, size_t count){
+    prepareEntity(entities[0], program);
+
+    for(size_t i = 0; i < count; i++){
+        Entity* en = entities[i];
+        prepareInstance(en, program);
+        if(en->mesh->ebo != -1)
+            glDrawElements(GL_TRIANGLES, (GLsizei)(en->mesh->dataSize / sizeof(GLuint)), GL_UNSIGNED_INT, NULL);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(en->mesh->dataSize / sizeof(GLfloat)));
+
+    }
+
+    unbindEntity(entities[0]);
+}
+
 Renderer* newRenderer(float fov, float height, float width, float near, float far){
     Renderer* renderer = (Renderer*) malloc(sizeof(Renderer));
     renderer->projection = createPerspectiveMatrix(fov, width, height, near, far);
@@ -119,6 +209,9 @@ Renderer* newRenderer(float fov, float height, float width, float near, float fa
     renderer->width = width;
     renderer->fov = fov;
     renderer->far = far;
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     return renderer;
 }

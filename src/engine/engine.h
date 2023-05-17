@@ -16,5 +16,7 @@
 #include "Utils/Primitives.h"
 #include "Utils/FileUtils.h"
 #include "GameObject/Light.h"
+#include "GameObject/Terrain.h"
+#include "Core/MasterRenderer.h"
 
 #endif //ENGINE_ENGINE_H

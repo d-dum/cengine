@@ -1,13 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "engine/engine.h"
 
 int main() {
 
+    srand(time(NULL));
+
     DisplayManager* manager = newDisplayManager(1024, 768);
 
-    vec3 eye = {0, 0, -6};
+    vec3 eye = {0, 0, -20};
     vec3 center = {0, 0, 0};
 
     Shader* vertex = newShader("../res/shaders/vert.glsl", VERTEX_SHADER);
@@ -40,6 +43,22 @@ int main() {
 
     enScale(ent, (vec3){0.1, 0.1, 0.1});
 
+    Entity** entities = malloc(sizeof(Entity*) * 10);
+
+    for(int i = 0; i < 10; i++){
+        entities[i] = newEntity(mesh);
+        //enScale(entities[i], (vec3){0.f, 0.1f, 0.1f});
+        float x = (float)rand() / (float)RAND_MAX;
+        float y = (float)rand() / (float)RAND_MAX;
+        float z = (float)rand() / (float)RAND_MAX;
+
+        enTranslate(entities[i], (vec3){x, y, z});
+    }
+
+    MasterRenderer* msr = newMasterRenderer(manager, 45.0f, program);
+    msr->entities = entities;
+    msr->arrLength = 10;
+
     printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d, normals: %d\n", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv, mesh->nbo);
 
     fflush(stdout);
@@ -51,11 +70,11 @@ int main() {
     do {
         prepareRenderer(renderer, program, camera);
 
-        enRotate(ent, (float)(0.5 * manager->deltaTime), (vec3)AXIS_Y);
-
         useProgram(program);
-            renderEntity(renderer, ent, program, light);
+            for(int i = 0; i < 10; i++)
+                renderEntity(renderer, entities[i], program, light);
         stopProgram(program);
+        //renderMaster(msr, light, camera);
 
         update(manager);
     } while(isCloseRequested(manager) == 0);
@@ -74,6 +93,7 @@ int main() {
     rendererCleanup(renderer);
     cameraCleanup(camera);
     deleteLight(light);
+    deleteMasterRenderer(msr, 0, 1);
 
     return 0;
 }
