@@ -4,6 +4,8 @@ Cengine is my attempt to write working renderer (or something more) in c languag
 ## Running
 to run this example (for linux) tou need cmake and glew installed, other dependencies are shipped as submodules in lib/
 
+on linux you will probably need libxinerama, libxi, libxcursor
+
 ```` bash
 git clone --recursive https://github.com/d-dum/cengine.git
 cd cengine

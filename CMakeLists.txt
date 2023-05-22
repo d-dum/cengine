@@ -5,7 +5,6 @@ find_package(PkgConfig REQUIRED)
 add_subdirectory(lib/glfw)
 pkg_check_modules(GLEW REQUIRED glew)
 add_subdirectory(lib/cglm)
-pkg_check_modules(LIBPNG REQUIRED libpng)
 
 include(CheckLibraryExists)
 
@@ -53,7 +52,6 @@ add_executable(engine_test
 #target_include_directories(engine_test PUBLIC ${GLFW3_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${GLEW_INCLUDE_DIRS})
 target_include_directories(engine_test PRIVATE cglm)
-target_include_directories(engine_test PUBLIC ${PNG_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${SOIL2_INCLUDE_DIRS})
 target_link_libraries(engine_test PRIVATE glfw)
 target_link_libraries(engine_test PUBLIC ${GLEW_LIBRARIES})
