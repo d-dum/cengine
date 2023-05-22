@@ -5,6 +5,7 @@ find_package(PkgConfig REQUIRED)
 add_subdirectory(lib/glfw)
 pkg_check_modules(GLEW REQUIRED glew)
 add_subdirectory(lib/cglm)
+add_subdirectory(lib/wren-cmake)
 
 include(CheckLibraryExists)
 
@@ -36,10 +37,12 @@ add_executable(engine_test
 target_include_directories(engine_test PUBLIC ${GLEW_INCLUDE_DIRS})
 target_include_directories(engine_test PRIVATE cglm)
 target_include_directories(engine_test PUBLIC ${SOIL2_INCLUDE_DIRS})
+target_include_directories(engine_test PRIVATE wren)
 target_link_libraries(engine_test PRIVATE glfw)
 target_link_libraries(engine_test PUBLIC ${GLEW_LIBRARIES})
 target_link_libraries(engine_test PUBLIC ${CGLM_LIBRARIES})
 target_link_libraries(engine_test PUBLIC ${PNG_LIBRARIES})
+target_link_libraries(engine_test PRIVATE wren)
 
 target_link_libraries(engine_test PUBLIC ${EXTRA_LIBS})
 target_link_libraries(engine_test PRIVATE soil2)
