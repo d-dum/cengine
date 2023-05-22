@@ -21,34 +21,17 @@ endif (HAVE_LIB_M)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fms-extensions")
 
+file(GLOB_RECURSE ENGINE_SRC "src/*.c")
+file(GLOB_RECURSE ENGINE_HEADER "src/*.h")
+
+set(ENGINE_SRC ${ENGINE_SRC} ${ENGINE_HEADER})
+
 add_executable(engine_test
-        src/main.c
-        src/engine/Core/DisplayManager.c
-        src/engine/Core/DisplayManager.h
-        src/engine/Core/Shader.c
-        src/engine/Core/Shader.h
-        src/engine/Utils/FileUtils.c
-        src/engine/Utils/FileUtils.h
-        src/engine/Core/ShaderProgram.c
-        src/engine/Core/ShaderProgram.h
-        src/engine/Core/MeshLoader.c
-        src/engine/Core/MeshLoader.h
-        src/engine/Core/Renderer.c
-        src/engine/Core/Renderer.h
-        src/engine/Utils/Mat.c
-        src/engine/Utils/Mat.h
-        src/engine/Utils/Mem.c
-        src/engine/Utils/Mem.h
-        src/engine/GameObject/Entity.c
-        src/engine/GameObject/Entity.h
-        src/engine/GameObject/Camera.c
-        src/engine/GameObject/Camera.h
-        src/engine/Utils/Misc.h
-        src/engine/Utils/Primitives.h
-        src/engine/engine.h
-        lib/fast_obj/fast_obj.c
-        lib/fast_obj/fast_obj.h
-        lib/cgltf/cgltf.h src/engine/Utils/Arr.c src/engine/Utils/Arr.h src/engine/GameObject/Light.c src/engine/GameObject/Light.h src/engine/GameObject/Terrain.c src/engine/GameObject/Terrain.h src/engine/Core/MasterRenderer.c src/engine/Core/MasterRenderer.h)
+    ${ENGINE_SRC}
+    lib/fast_obj/fast_obj.c
+    lib/fast_obj/fast_obj.h
+    lib/cgltf/cgltf.h src/engine/Utils/Arr.c 
+)
 #target_include_directories(engine_test PUBLIC ${GLFW3_INCLUDE_DIRS})
 target_include_directories(engine_test PUBLIC ${GLEW_INCLUDE_DIRS})
 target_include_directories(engine_test PRIVATE cglm)
