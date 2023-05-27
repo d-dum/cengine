@@ -8,8 +8,6 @@
 #include <stdlib.h>
 
 
-
-
 char* readFile(char* path){
     FILE* f = fopen(path, "r");
     if(f == NULL){
@@ -28,7 +26,7 @@ char* readFile(char* path){
 
     fread(ret, fSize, 1, f);
     fclose(f);
-    ret[fSize] = 0;
+    ret[fSize] = '\0';
 
     return ret;
 }
@@ -74,25 +72,6 @@ void freeBMP(BMPImage* image){
     free(image->data);
     free(image);
 }
-
-//PNGImage* readPNG(char* path){
-//    int width, height, channels;
-//
-//    PNGImage* img = (PNGImage*) malloc(sizeof(PNGImage));
-//
-//    img->data = stbi_load(path, &width, &height, &channels, 0);
-//
-//    if(!img->data){
-//        free(img);
-//        return NULL;
-//    }
-//
-//    img->imageSize = width * height * channels;
-//    img->height = height;
-//    img->width = width;
-//
-//    return img;
-//}
 
 void freePNG(PNGImage* image){
     free(image->data);

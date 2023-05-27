@@ -19,4 +19,8 @@
 #include "GameObject/Terrain.h"
 #include "Core/MasterRenderer.h"
 
+#ifdef WREN_SCRIPT
+#include "Script/Wren.h"
+#endif
+
 #endif //ENGINE_ENGINE_H

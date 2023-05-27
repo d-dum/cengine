@@ -2,8 +2,15 @@
 #include <stdio.h>
 #include <time.h>
 
+#define WREN_SCRIPT
 #include "engine/engine.h"
 
+
+#ifndef SCRIPT_TEST
+#define SCRIPT_TEST 1
+#endif
+
+#if SCRIPT_TEST == 0
 int main() {
 
     srand(time(NULL));
@@ -97,3 +104,31 @@ int main() {
 
     return 0;
 }
+#endif
+
+#if SCRIPT_TEST == 1
+
+int main(void){
+    ScriptEngine* engine = newScriptEngine(1);
+
+    char* main = readFile("../scripts/main.wren");
+
+    printf("success\n");
+    WrenInterpretResult result = wrenInterpret(engine->vm, "main_m", main);
+
+
+    switch (result) {
+    case WREN_RESULT_COMPILE_ERROR:
+      { printf("Compile Error!\n"); } break;
+    case WREN_RESULT_RUNTIME_ERROR:
+      { printf("Runtime Error!\n"); } break;
+    case WREN_RESULT_SUCCESS:
+      { printf("Success!\n"); } break;
+  }
+
+    destroyScriptEngine(engine);
+    free(main);
+    return 0;
+}
+
+#endif
