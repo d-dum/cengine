@@ -27,6 +27,7 @@ typedef struct Wren
 
 ScriptEngine* newScriptEngine(char includeCore);
 void destroyScriptEngine(ScriptEngine* engine);
+void executeScript(ScriptEngine* engine, char* sourceOrPath, char isPath, char isEntry);
 
 
 #endif

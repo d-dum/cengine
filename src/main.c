@@ -111,23 +111,9 @@ int main() {
 int main(void){
     ScriptEngine* engine = newScriptEngine(1);
 
-    char* main = readFile("../scripts/main.wren");
-
-    printf("success\n");
-    WrenInterpretResult result = wrenInterpret(engine->vm, "main_m", main);
-
-
-    switch (result) {
-    case WREN_RESULT_COMPILE_ERROR:
-      { printf("Compile Error!\n"); } break;
-    case WREN_RESULT_RUNTIME_ERROR:
-      { printf("Runtime Error!\n"); } break;
-    case WREN_RESULT_SUCCESS:
-      { printf("Success!\n"); } break;
-  }
+    executeScript(engine, "../scripts/main.wren", 1, 1);
 
     destroyScriptEngine(engine);
-    free(main);
     return 0;
 }
 

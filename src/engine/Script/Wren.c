@@ -110,6 +110,35 @@ void errorFn(WrenVM* vm, WrenErrorType errorType,
   }
 }
 
+void executeScript(ScriptEngine* engine, char* sourceOrPath, char isPath, char isEntry){
+    char* src = isPath? 
+        readFile(sourceOrPath) :
+        sourceOrPath;
+    
+    WrenInterpretResult result = wrenInterpret(engine->vm, "main", src);
+
+    switch (result) {
+        case WREN_RESULT_COMPILE_ERROR:
+        { printf("Compile Error!\n"); } break;
+        case WREN_RESULT_RUNTIME_ERROR:
+        { printf("Runtime Error!\n"); } break;
+        case WREN_RESULT_SUCCESS:
+        { printf("Success!\n"); } break;
+    }
+
+    if(isPath)
+        free(src);
+    
+    if(result == WREN_RESULT_SUCCESS && isEntry){
+        wrenEnsureSlots(engine->vm, 1);
+        wrenGetVariable(engine->vm, "main", "GameEngine", 0);
+        WrenHandle* gameEngineClass = wrenGetSlotHandle(engine->vm, 0);
+        wrenSetSlotHandle(engine->vm, 0, gameEngineClass);
+        WrenHandle* launchHandle = wrenMakeCallHandle(engine->vm, "launch()");
+        printf("ENGINE LAUNCHED\n");
+        result = wrenCall(engine->vm, launchHandle);
+    }
+}
 
 
 ScriptEngine* newScriptEngine(char includeCore){
