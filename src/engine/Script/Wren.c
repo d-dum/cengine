@@ -37,6 +37,75 @@ void meshFinalize(void* data){
     deleteMesh(*mesh);
 }
 
+void entityAllocate(WrenVM* vm){
+    //printf("Mesh is %s\n", wrenGetSlotType(vm, 1));
+    Entity** en = (Entity**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Entity*));
+    Mesh** mesh = (Mesh**) wrenGetSlotForeign(vm, 1);
+
+    //printf("Mesh is %s\n", wrenGetSlotType(vm, 1));
+
+    *en = newEntity(*mesh);
+}
+
+void entityFinalize(void* data){
+    Entity** en = (Entity**) data;
+
+    entityCleanup(*en);
+}
+
+void vec3Allocate(WrenVM* vm){
+    float** vc = (float**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(float*));
+
+    float x = wrenGetSlotDouble(vm, 1);
+    float y = wrenGetSlotDouble(vm, 1);
+    float z = wrenGetSlotDouble(vm, 1);
+
+    *vc = calloc(3, sizeof(float));
+    *vc[0] = x;
+    *vc[1] = y;
+    *vc[2] = z;
+}
+
+void vec3Finalize(void* data){
+    float** vc = (float**) data;
+    free(*vc);
+}
+
+void vec3GetElement(WrenVM* vm){
+    float** vc = (float**) wrenGetSlotForeign(vm, 0);
+    int inx = (int) wrenGetSlotDouble(vm, 0);
+
+    if(inx > 2 || inx < 0){
+        wrenSetSlotHandle(vm, 0, (WrenHandle*) "Index out of bounds");
+        wrenAbortFiber(vm, 0);
+        return;
+    }
+
+    wrenSetSlotDouble(vm, 0, (*vc)[inx]);
+}
+
+void entityRotate(WrenVM* vm){
+    Entity** en = (Entity**) wrenGetSlotForeign(vm, 0);
+    float angle = wrenGetSlotDouble(vm, 1);
+    float** vc = wrenGetSlotForeign(vm, 2);
+
+    enRotate(*en, angle, *vc);
+}
+
+void entityTranslate(WrenVM* vm){
+    Entity** en = (Entity**) wrenGetSlotForeign(vm, 0);
+    float** vc = wrenGetSlotForeign(vm, 1);
+
+    enTranslate(*en, *vc);
+}
+
+void entityScale(WrenVM* vm){
+    Entity** en = (Entity**) wrenGetSlotForeign(vm, 0);
+    float** vc = wrenGetSlotForeign(vm, 1);
+
+    enScale(*en, *vc);
+}
+
 void meshAddTexture(WrenVM* vm){
     Mesh** mesh = (Mesh**) wrenGetSlotForeign(vm, 0);
     char* path = (char*) wrenGetSlotString(vm, 1);
@@ -74,6 +143,12 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "MeshLoader") == 0){
         methods.allocate = &meshAllocate;
         methods.finalize = &meshFinalize;
+    }else if(strcmp(className, "Vec3") == 0){
+        methods.allocate = &vec3Allocate;
+        methods.finalize = &vec3Finalize;
+    }else if(strcmp(className, "Entity") == 0){
+        methods.allocate = &entityAllocate;
+        methods.finalize = &entityFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
@@ -114,6 +189,26 @@ WrenForeignMethodFn bindForeignMethod(WrenVM* vm, const char* module,
         if(!isStatic){
             if(strcmp(signature, "loadTexture(_)") == 0){
                 return meshAddTexture;
+            }
+        }
+    }
+    if(strcmp(className, "Vec3") == 0){
+        if(!isStatic){
+            if(strcmp(signature, "getElement(_)") == 0){
+                return vec3GetElement;
+            }
+        }
+    }
+    if(strcmp(className, "Entity") == 0){
+        if(!isStatic){
+            if(strcmp(signature, "translate(_)") == 0){
+                return entityTranslate;
+            }
+            if(strcmp(signature, "rotate(_,_)") == 0){
+                return entityRotate;
+            }
+            if(strcmp(signature, "scale(_)") == 0){
+                return entityScale;
             }
         }
     }

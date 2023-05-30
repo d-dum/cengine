@@ -12,3 +12,22 @@ foreign class MeshLoader {
 
     foreign loadTexture(path)
 }
+
+foreign class Vec3 {
+    construct create(x, y, z){}
+
+    foreign getElement(inx)
+
+    [index] {
+        return this.getElement(index)
+    }
+}
+
+
+foreign class Entity {
+    construct create(mesh){}
+
+    foreign translate(transform)
+    foreign rotate(angle, axis)
+    foreign scale(scaleVec)
+}
