@@ -6,3 +6,9 @@ foreign class DisplayManager {
     foreign isCloseRequested()
     foreign update()
 }
+
+foreign class MeshLoader {
+    construct create(path, hasUvs){}
+
+    foreign loadTexture(path)
+}

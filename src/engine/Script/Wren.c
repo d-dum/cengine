@@ -24,6 +24,28 @@ void dmFinalize(void* data){
     dmCleanup(*mng);
 }
 
+void meshAllocate(WrenVM* vm){
+    Mesh** mesh = (Mesh**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(DisplayManager*));
+    char* path = (char*) wrenGetSlotString(vm, 1);
+    char hasUvs = (char) wrenGetSlotBool(vm, 2);
+
+    *mesh = loadFromOBJ(path, hasUvs);
+}
+
+void meshFinalize(void* data){
+    Mesh** mesh = (Mesh**) data;
+    deleteMesh(*mesh);
+}
+
+void meshAddTexture(WrenVM* vm){
+    Mesh** mesh = (Mesh**) wrenGetSlotForeign(vm, 0);
+    char* path = (char*) wrenGetSlotString(vm, 1);
+
+    CHECK_NULL(mesh, "cannot use destroyed mesh");
+
+    loadAnyTexture(*mesh, path);
+}
+
 void dmIsCloseRequested(WrenVM* vm){
     DisplayManager** mng = (DisplayManager**) wrenGetSlotForeign(vm, 0);
 
@@ -49,6 +71,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     if(strcmp(className, "DisplayManager") == 0){
         methods.allocate = &dmAllocate;
         methods.finalize = &dmFinalize;
+    }else if(strcmp(className, "MeshLoader") == 0){
+        methods.allocate = &meshAllocate;
+        methods.finalize = &meshFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
@@ -83,6 +108,13 @@ WrenForeignMethodFn bindForeignMethod(WrenVM* vm, const char* module,
         }
         if(!isStatic && strcmp(signature, "update()") == 0){
             return dmUpdate;
+        }
+    }
+    if(strcmp(className, "MeshLoader") == 0){
+        if(!isStatic){
+            if(strcmp(signature, "loadTexture(_)") == 0){
+                return meshAddTexture;
+            }
         }
     }
 
