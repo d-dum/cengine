@@ -57,13 +57,13 @@ void vec3Allocate(WrenVM* vm){
     float** vc = (float**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(float*));
 
     float x = wrenGetSlotDouble(vm, 1);
-    float y = wrenGetSlotDouble(vm, 1);
-    float z = wrenGetSlotDouble(vm, 1);
+    float y = wrenGetSlotDouble(vm, 2);
+    float z = wrenGetSlotDouble(vm, 3);
 
-    *vc = calloc(3, sizeof(float));
-    *vc[0] = x;
-    *vc[1] = y;
-    *vc[2] = z;
+    *vc = (float*) malloc(3 * sizeof(float));
+    (*vc)[0] = (float)x;
+    (*vc)[1] = (float)y;
+    (*vc)[2] = (float)z;
 }
 
 void vec3Finalize(void* data){
@@ -73,7 +73,7 @@ void vec3Finalize(void* data){
 
 void vec3GetElement(WrenVM* vm){
     float** vc = (float**) wrenGetSlotForeign(vm, 0);
-    int inx = (int) wrenGetSlotDouble(vm, 0);
+    int inx = (int) wrenGetSlotDouble(vm, 1);
 
     if(inx > 2 || inx < 0){
         wrenSetSlotHandle(vm, 0, (WrenHandle*) "Index out of bounds");
