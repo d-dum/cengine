@@ -9,7 +9,7 @@
 
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
-typedef struct {
+typedef struct Entity {
     Mesh* mesh;
     vec4* mvp;
 } Entity;

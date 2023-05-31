@@ -7,7 +7,7 @@
 
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
-typedef struct {
+typedef struct Camera {
     vec4* view;
     float* position;
     float* lookAt;

@@ -9,7 +9,7 @@
 
 #include <GL/glew.h>
 
-typedef struct {
+typedef struct Mesh {
     GLuint vao;
     GLuint vbo;
     GLuint cbo;

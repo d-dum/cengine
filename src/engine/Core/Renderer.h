@@ -14,7 +14,7 @@
 
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
-typedef struct {
+typedef struct Renderer {
     vec4* projection;
     float fov;
     float width;

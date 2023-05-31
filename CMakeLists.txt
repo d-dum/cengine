@@ -20,7 +20,7 @@ endif (HAVE_LIB_M)
 
 
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fms-extensions")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 
 file(GLOB_RECURSE ENGINE_SRC "src/*.c")
 file(GLOB_RECURSE ENGINE_HEADER "src/*.h")

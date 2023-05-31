@@ -16,3 +16,6 @@
 [submodule "lib/wren-cmake"]
 	path = lib/wren-cmake
 	url = git@github.com:d-dum/wren-cmake.git
+[submodule "lib/freetype"]
+	path = lib/freetype
+	url = git@github.com:freetype/freetype.git

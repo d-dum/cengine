@@ -9,7 +9,7 @@
 #include "../../../lib/cglm/include/cglm/cglm.h"
 #include "Shader.h"
 
-typedef struct{
+typedef struct ShaderProgram {
     GLuint programId;
     Shader** shaders;
     long shaderArrayLength;

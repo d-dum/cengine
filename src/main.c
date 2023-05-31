@@ -7,7 +7,7 @@
 
 
 #ifndef SCRIPT_TEST
-#define SCRIPT_TEST 1
+#define SCRIPT_TEST 0
 #endif
 
 #if SCRIPT_TEST == 0

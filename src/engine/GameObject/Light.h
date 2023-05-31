@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 #include "../../../lib/cglm/include/cglm/cglm.h"
 
-typedef struct {
+typedef struct Light {
     float* position;
     float* colour;
 } Light;

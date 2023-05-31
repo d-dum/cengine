@@ -7,7 +7,7 @@
 
 #include <GL/glew.h>
 
-typedef struct {
+typedef struct Shader {
     GLuint shaderId;
     GLenum type;
 } Shader;

@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include "../../../lib/glfw/include/GLFW/glfw3.h"
 
-typedef struct {
+typedef struct DisplayManager {
     int width;
     int height;
     GLFWwindow* window;
