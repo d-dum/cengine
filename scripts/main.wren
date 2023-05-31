@@ -12,8 +12,6 @@ class GameEngine {
         var vc = Vec3.create(1, 2, 3)
         System.print(vc[0])
 
-        // en.scale(Vec3.create(0.1, 0.1, 0.1))
-
         var cam = Camera.create(Vec3.create(0, 0, -20), Vec3.create(0, 0, 0), Vec3.axisY())
 
         var vert = Shader.create("../res/shaders/vert.glsl", ShaderType.VERTEX())
@@ -32,6 +30,8 @@ class GameEngine {
             
             rnd.render(en, prog, light)
             prog.stop()
+
+            en.rotate(0.01, Vec3.axisY())
 
             dm.update()
         }
