@@ -35,6 +35,15 @@ foreign class Vec3 {
     }
 }
 
+class ShaderType {
+    static VERTEX(){
+        return 0
+    }
+
+    static FRAGMENT(){
+        return 1
+    }
+}
 
 foreign class Entity {
     construct create(mesh){}
@@ -46,4 +55,8 @@ foreign class Entity {
 
 foreign class Camera {
     construct create(position, lookAt, up){}
+}
+
+foreign class Shader {
+    construct create(filePath, shaderType){}
 }

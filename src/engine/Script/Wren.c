@@ -147,6 +147,31 @@ void dmUpdate(WrenVM* vm){
     update(*mng);
 }
 
+void shaderAllocate(WrenVM* vm){
+    Shader** shader = (Shader**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Shader*));
+    GLenum shaderType;
+
+    char* path = (char*)wrenGetSlotString(vm, 1);
+    int tp = (int) wrenGetSlotDouble(vm, 2);
+
+    switch(tp){
+        case 0:
+            shaderType = VERTEX_SHADER;
+            break;
+        case 1:
+            shaderType = FRAGMENT_SHADER;
+            break;
+    }
+
+    
+    *shader = newShader(path, shaderType);
+}
+
+void shaderFinalize(void* data){
+    Shader** shader = (Shader**) data;
+    shaderCleanup(*shader);
+}
+
 WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const char* className){
     WrenForeignClassMethods methods;
 
@@ -167,6 +192,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "Camera") == 0){
         methods.allocate = &camAllocate;
         methods.finalize = &camFinalize;
+    }else if(strcmp(className, "Shader") == 0){
+        methods.allocate = &shaderAllocate;
+        methods.finalize = &shaderFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;

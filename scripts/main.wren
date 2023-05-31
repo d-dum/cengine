@@ -1,4 +1,4 @@
-import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera
+import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType
 
 class GameEngine {
     static launch(){
@@ -13,6 +13,9 @@ class GameEngine {
         en.scale(Vec3.create(0.1, 0.1, 0.1))
 
         var cam = Camera.create(Vec3.create(0, 0, -20), Vec3.create(0, 0, 0), Vec3.axisY())
+
+        var vert = Shader.create("../res/shaders/vert.glsl", 0)
+        var frag = Shader.create("../res/shaders/frag.glsl", ShaderType.FRAGMENT())
 
         while(!dm.isCloseRequested()){
             dm.update()
