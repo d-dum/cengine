@@ -71,3 +71,11 @@ foreign class ShaderProgram {
 foreign class Light {
     construct create(position, color){}
 }
+
+foreign class Renderer {
+    construct create(fov, height, width, near, far){}
+
+    foreign prepare(program, camera)
+    
+    foreign render(entity, program, light)
+}

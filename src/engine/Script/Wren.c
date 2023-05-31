@@ -172,6 +172,8 @@ void shaderAllocate(WrenVM* vm){
 
     
     *shader = newShader(path, shaderType);
+
+    printf("Shader: %d\n", (*shader)->shaderId);
 }
 
 void shaderFinalize(void* data){
@@ -190,8 +192,6 @@ void shaderProgramAllocate(WrenVM* vm){
     shaders[1] = *frag;
 
     *program = newShaderProgram(shaders, 2);
-
-    //free(shaders);
 }
 
 void shaderProgramFinalize(void* data){
@@ -201,7 +201,6 @@ void shaderProgramFinalize(void* data){
 
 void shaderProgramStart(WrenVM* vm){
     ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 0);
-
     useProgram(*prg);
 }
 
@@ -211,7 +210,7 @@ void shaderProgramStop(WrenVM* vm){
 }
 
 void lighAllocate(WrenVM* vm){
-    Light** light = (Light**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Shader*));
+    Light** light = (Light**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Light*));
 
     float** pos = wrenGetSlotForeign(vm, 1);
     float** color = wrenGetSlotForeign(vm, 2);
@@ -222,6 +221,42 @@ void lighAllocate(WrenVM* vm){
 void lightFinalize(void* data){
     Light** light = (Light**) data;
     deleteLight(*light);
+}
+
+void rendererAllocate(WrenVM* vm){
+    Renderer** rnd = (Renderer**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Renderer*));
+
+    float fov = wrenGetSlotDouble(vm, 1);
+    float height = wrenGetSlotDouble(vm, 2);
+    float width = wrenGetSlotDouble(vm, 3);
+    float near = wrenGetSlotDouble(vm, 4);
+    float far = wrenGetSlotDouble(vm, 5);
+
+    *rnd = newRenderer(fov, height, width, near, far);
+}
+
+void rendererFinalize(void* data){
+    Renderer** rnd = (Renderer**) data;
+
+    rendererCleanup(*rnd);
+}
+
+void rendererRenderEntity(WrenVM* vm){
+    Renderer** rnd = (Renderer**) wrenGetSlotForeign(vm, 0);
+
+    Entity** ent = (Entity**) wrenGetSlotForeign(vm, 1);
+    ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 2);
+    Light** lt = (Light**) wrenGetSlotForeign(vm, 3);
+
+    renderEntity(*rnd, *ent, *prg, *lt);
+}
+
+void rndPrepare(WrenVM* vm){
+    Renderer** rnd = (Renderer**) wrenGetSlotForeign(vm, 0);
+    ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 1);
+    Camera** cam = (Camera**) wrenGetSlotForeign(vm, 2);
+
+    prepareRenderer(*rnd, *prg, *cam);
 }
 
 WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const char* className){
@@ -253,6 +288,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "Light") == 0){
         methods.allocate = &lighAllocate;
         methods.finalize = &lightFinalize;
+    }else if(strcmp(className, "Renderer") == 0){
+        methods.allocate = &rendererAllocate;
+        methods.finalize = &rendererFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
@@ -354,6 +392,15 @@ WrenForeignMethodFn bindForeignMethod(WrenVM* vm, const char* module,
         }
         if(strcmp(signature, "stop()") == 0){
             return shaderProgramStop;
+        }
+    }
+
+    if(strcmp(className, "Renderer") == 0){
+        if(strcmp(signature, "prepare(_,_)") == 0){
+            return rndPrepare;
+        }
+        if(strcmp(signature, "render(_,_,_)") == 0){
+            return rendererRenderEntity;
         }
     }
 
