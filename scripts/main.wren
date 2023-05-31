@@ -1,4 +1,4 @@
-import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType, ShaderProgram
+import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType, ShaderProgram, Light
 import "tst.wren" for tst
 
 class GameEngine {
@@ -20,7 +20,13 @@ class GameEngine {
 
         var prog = ShaderProgram.create(vert, frag)
 
+        var light = Light.create(Vec3.create(0, 0, -20), Vec3.create(1, 1, 1))
+
         while(!dm.isCloseRequested()){
+            prog.start()
+
+            prog.stop()
+
             dm.update()
         }
     }

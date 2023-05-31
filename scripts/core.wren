@@ -67,3 +67,7 @@ foreign class ShaderProgram {
     foreign start()
     foreign stop()
 }
+
+foreign class Light {
+    construct create(position, color){}
+}

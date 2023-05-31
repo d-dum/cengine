@@ -191,7 +191,7 @@ void shaderProgramAllocate(WrenVM* vm){
 
     *program = newShaderProgram(shaders, 2);
 
-    free(shaders);
+    //free(shaders);
 }
 
 void shaderProgramFinalize(void* data){
@@ -208,6 +208,20 @@ void shaderProgramStart(WrenVM* vm){
 void shaderProgramStop(WrenVM* vm){
     ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 0);
     stopProgram(*prg);
+}
+
+void lighAllocate(WrenVM* vm){
+    Light** light = (Light**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Shader*));
+
+    float** pos = wrenGetSlotForeign(vm, 1);
+    float** color = wrenGetSlotForeign(vm, 2);
+
+    *light = newLight(*pos, *color);
+}
+
+void lightFinalize(void* data){
+    Light** light = (Light**) data;
+    deleteLight(*light);
 }
 
 WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const char* className){
@@ -236,6 +250,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "ShaderProgram") == 0){
         methods.allocate = &shaderProgramAllocate;
         methods.finalize = &shaderProgramFinalize;
+    }else if(strcmp(className, "Light") == 0){
+        methods.allocate = &lighAllocate;
+        methods.finalize = &lightFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
