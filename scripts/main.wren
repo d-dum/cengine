@@ -1,4 +1,4 @@
-import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType
+import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType, ShaderProgram
 import "tst.wren" for tst
 
 class GameEngine {
@@ -17,6 +17,8 @@ class GameEngine {
 
         var vert = Shader.create("../res/shaders/vert.glsl", 0)
         var frag = Shader.create("../res/shaders/frag.glsl", ShaderType.FRAGMENT())
+
+        var prog = ShaderProgram.create(vert, frag)
 
         while(!dm.isCloseRequested()){
             dm.update()

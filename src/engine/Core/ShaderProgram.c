@@ -53,6 +53,14 @@ void shaderProgramCleanup(ShaderProgram* program){
     free(program);
 }
 
+void shaderProgramCleanupSimple(ShaderProgram* program){
+    for(int i = 0; i < program->shaderArrayLength; i++){
+        glDetachShader(program->programId, program->shaders[i]->shaderId);
+    }
+    glDeleteProgram(program->programId);
+    free(program);
+}
+
 GLint getUniformLocation(ShaderProgram* program, const GLchar* uniformName){
     GLint location = glGetUniformLocation(program->programId, uniformName);
     if(location == -1){

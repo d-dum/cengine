@@ -179,6 +179,37 @@ void shaderFinalize(void* data){
     shaderCleanup(*shader);
 }
 
+void shaderProgramAllocate(WrenVM* vm){
+    ShaderProgram** program = (ShaderProgram**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Shader*));
+    Shader** vert = (Shader**) wrenGetSlotForeign(vm, 1);
+    Shader** frag = (Shader**) wrenGetSlotForeign(vm, 2);
+
+    Shader** shaders = malloc(sizeof(Shader*) * 2);
+    
+    shaders[0] = *vert;
+    shaders[1] = *frag;
+
+    *program = newShaderProgram(shaders, 2);
+
+    free(shaders);
+}
+
+void shaderProgramFinalize(void* data){
+    ShaderProgram** program = (ShaderProgram**) data;
+    shaderProgramCleanupSimple(*program);
+}
+
+void shaderProgramStart(WrenVM* vm){
+    ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 0);
+
+    useProgram(*prg);
+}
+
+void shaderProgramStop(WrenVM* vm){
+    ShaderProgram** prg = (ShaderProgram**) wrenGetSlotForeign(vm, 0);
+    stopProgram(*prg);
+}
+
 WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const char* className){
     WrenForeignClassMethods methods;
 
@@ -202,6 +233,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "Shader") == 0){
         methods.allocate = &shaderAllocate;
         methods.finalize = &shaderFinalize;
+    }else if(strcmp(className, "ShaderProgram") == 0){
+        methods.allocate = &shaderProgramAllocate;
+        methods.finalize = &shaderProgramFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
@@ -295,6 +329,14 @@ WrenForeignMethodFn bindForeignMethod(WrenVM* vm, const char* module,
             if(strcmp(signature, "scale(_)") == 0){
                 return entityScale;
             }
+        }
+    }
+    if(strcmp(className, "ShaderProgram") == 0){
+        if(strcmp(signature, "start()") == 0){
+            return shaderProgramStart;
+        }
+        if(strcmp(signature, "stop()") == 0){
+            return shaderProgramStop;
         }
     }
 

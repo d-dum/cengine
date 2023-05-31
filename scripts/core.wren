@@ -60,3 +60,10 @@ foreign class Camera {
 foreign class Shader {
     construct create(filePath, shaderType){}
 }
+
+foreign class ShaderProgram {
+    construct create(vertex, fragment){}
+
+    foreign start()
+    foreign stop()
+}
