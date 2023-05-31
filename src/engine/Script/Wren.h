@@ -9,6 +9,10 @@
 #define PATH_TO_WREN_CORE "../scripts/core.wren"
 #endif
 
+#ifndef SCRIPT_ROOT
+#define SCRIPT_ROOT "../scripts/"
+#endif
+
 #include "../../../lib/wren-cmake/src/include/wren.h"
 
 #define CHECK_NULL(obj, error) \

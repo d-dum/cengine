@@ -1,4 +1,5 @@
 import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera, Shader, ShaderType
+import "tst.wren" for tst
 
 class GameEngine {
     static launch(){

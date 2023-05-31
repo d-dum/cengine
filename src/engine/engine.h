@@ -18,6 +18,7 @@
 #include "GameObject/Light.h"
 #include "GameObject/Terrain.h"
 #include "Core/MasterRenderer.h"
+#include "Utils/Assoc.h"
 
 #ifdef WREN_SCRIPT
 #include "Script/Wren.h"

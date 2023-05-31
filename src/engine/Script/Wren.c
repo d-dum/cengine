@@ -7,6 +7,13 @@
 
 char* coreSrc = NULL;
 
+ASSOCIATIVE_ARRAY(char*, st)
+CREATE_NODE(char*, st)
+FIND_NODE(char*, st)
+NODE_APPEND(char*, st)
+
+List_st* modules = NULL;
+
 void writeFn(WrenVM* vm, const char* text) {
     printf("%s", text);
 }
@@ -213,11 +220,43 @@ WrenLoadModuleResult wrenLoadModule(WrenVM* vm, const char* name){
     WrenLoadModuleResult result;
     result.onComplete = &moduleComplete;
 
-    if(!strcmp(name, "core")){
+    if(strcmp(name, "core") == 0){
         result.source = coreSrc;
+    }else{
+        if(modules == NULL){
+            char path[50] = SCRIPT_ROOT;
+            char* module = readFile(strcat(path, name));
+            result.source = module;
+            modules = createNode_st(name, module);
+        }else{
+            List_st* f;
+            if((f = findNode_st(name, modules)) != NULL){
+                result.source = f->value;
+            }else{
+                char path[50] = SCRIPT_ROOT;
+                char* module = readFile(strcat(path, name));
+                result.source = module;
+                appendNode_st(modules, createNode_st(name, module));
+            }
+        }
     }
 
     return result;
+}
+
+void freeModule(){
+    List_st* rt = modules;
+    List_st* prev;
+
+    while(1){
+        prev = rt;
+        rt = rt->next;
+        free(prev->value);
+        free(prev);
+
+        if(rt == NULL)
+            return;
+    }
 }
 
 WrenForeignMethodFn bindForeignMethod(WrenVM* vm, const char* module,
@@ -335,6 +374,7 @@ ScriptEngine* newScriptEngine(char includeCore){
 
 void destroyScriptEngine(ScriptEngine* engine){
     free(coreSrc);
+    freeModule();
     wrenFreeVM(engine->vm);
     engine->vm = NULL;
     free(engine);
