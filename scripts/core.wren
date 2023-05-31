@@ -21,6 +21,18 @@ foreign class Vec3 {
     [index] {
         return this.getElement(index)
     }
+
+    static axisY(){
+        return Vec3.create(0, 1, 0)
+    }
+
+    static axisX(){
+        return Vec3.create(1, 0, 0)
+    }
+
+    static axisZ(){
+        return Vec3.create(0, 0, 1)
+    }
 }
 
 
@@ -30,4 +42,8 @@ foreign class Entity {
     foreign translate(transform)
     foreign rotate(angle, axis)
     foreign scale(scaleVec)
+}
+
+foreign class Camera {
+    construct create(position, lookAt, up){}
 }

@@ -1,4 +1,4 @@
-import "core" for DisplayManager, MeshLoader, Vec3, Entity
+import "core" for DisplayManager, MeshLoader, Vec3, Entity, Camera
 
 class GameEngine {
     static launch(){
@@ -8,7 +8,11 @@ class GameEngine {
         var en = Entity.create(mesh)
 
         var vc = Vec3.create(1, 2, 3)
-        System.print(vc.getElement(0))
+        System.print(vc[0])
+
+        en.scale(Vec3.create(0.1, 0.1, 0.1))
+
+        var cam = Camera.create(Vec3.create(0, 0, -20), Vec3.create(0, 0, 0), Vec3.axisY())
 
         while(!dm.isCloseRequested()){
             dm.update()

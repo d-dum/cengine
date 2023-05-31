@@ -53,6 +53,21 @@ void entityFinalize(void* data){
     entityCleanup(*en);
 }
 
+void camAllocate(WrenVM* vm){
+    Camera** cam = (Camera**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(Camera*));
+
+    float** position = (float**) wrenGetSlotForeign(vm, 1);
+    float** lookAt = (float**) wrenGetSlotForeign(vm, 2);
+    float** up = (float**) wrenGetSlotForeign(vm, 3);
+
+    *cam = newCamera(*position, *lookAt, *up);
+}
+
+void camFinalize(void* data){
+    Camera** cam = (Camera**) data;
+    cameraCleanup(*cam);
+}
+
 void vec3Allocate(WrenVM* vm){
     float** vc = (float**) wrenSetSlotNewForeign(vm, 0, 0, sizeof(float*));
 
@@ -149,6 +164,9 @@ WrenForeignClassMethods bindForeignClass(WrenVM* vm, const char* module, const c
     }else if(strcmp(className, "Entity") == 0){
         methods.allocate = &entityAllocate;
         methods.finalize = &entityFinalize;
+    }else if(strcmp(className, "Camera") == 0){
+        methods.allocate = &camAllocate;
+        methods.finalize = &camFinalize;
     }else{
         methods.allocate = NULL;
         methods.finalize = NULL;
