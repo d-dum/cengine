@@ -14,6 +14,7 @@
 int main() {
 
     srand(time(NULL));
+    Character** charset = loadFont("../res/fonts/montserat.ttf", 48);
 
     DisplayManager* manager = newDisplayManager(1024, 768);
 
@@ -101,6 +102,7 @@ int main() {
     cameraCleanup(camera);
     deleteLight(light);
     deleteMasterRenderer(msr, 0, 1);
+    deleteCharSet(charset);
 
     return 0;
 }
