@@ -46,6 +46,8 @@ DisplayManager* newDisplayManager(int width, int height){
     glfwSetInputMode(manager->window, GLFW_STICKY_KEYS, GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     manager->lastTime = glfwGetTime();
     manager->deltaTime = 0.0;
     return manager;

@@ -209,6 +209,7 @@ Renderer* newRenderer(float fov, float height, float width, float near, float fa
     renderer->width = width;
     renderer->fov = fov;
     renderer->far = far;
+    renderer->ortho = createOrthoMatrix(0.0, width, 0.0, height, near, far);
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -228,5 +229,6 @@ void updateProjection(Renderer* renderer){
 
 void rendererCleanup(Renderer* renderer){
     freeMatrixVector(renderer->projection);
+    freeMatrixVector(renderer->ortho);
     free(renderer);
 }
