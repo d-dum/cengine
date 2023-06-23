@@ -14,15 +14,19 @@
 int main() {
 
     srand(time(NULL));
-    Character** charset = loadFont("../res/fonts/montserat.ttf", 48);
+
 
     DisplayManager* manager = newDisplayManager(1024, 768);
+    Character** charset = loadFont("../res/fonts/montserat.ttf", 48);
 
     vec3 eye = {0, 0, -20};
     vec3 center = {0, 0, 0};
 
     Shader* vertex = newShader("../res/shaders/vert.glsl", VERTEX_SHADER);
     Shader* fragment = newShader("../res/shaders/frag.glsl", FRAGMENT_SHADER);
+
+    Shader* textVertex = newShader("../res/shaders/glyph_vert.glsl", VERTEX_SHADER);
+    Shader* textFragment = newShader("../res/shaders/glyph_frag.glsl", FRAGMENT_SHADER);
 
     if(vertex == NULL || fragment == NULL){
         dmCleanup(manager);
@@ -37,6 +41,12 @@ int main() {
 
     ShaderProgram* program = newShaderProgram(shaders, 2);
 
+    Shader** shaderText = malloc(sizeof(Shader*) * 2);
+    shaderText[0] = textVertex;
+    shaderText[1] = textFragment;
+
+    ShaderProgram* programText = newShaderProgram(shaderText, 2);
+
     if(program == NULL){
         shaderCleanup(shaders[0]);
         shaderCleanup(shaders[1]);
@@ -45,29 +55,25 @@ int main() {
         return -1;
     }
 
-    Mesh* mesh = loadFromOBJ("../res/models/stall.obj", 1);
-    loadAnyTexture(mesh, "../res/textures/stallTexture.png");
-    Entity* ent = newEntity(mesh);
+    // Mesh* mesh = loadFromOBJ("../res/models/stall.obj", 1);
+    // loadAnyTexture(mesh, "../res/textures/stallTexture.png");
+    // Entity* ent = newEntity(mesh);
 
-    enScale(ent, (vec3){0.1, 0.1, 0.1});
+    // enScale(ent, (vec3){0.1, 0.1, 0.1});
 
-    Entity** entities = malloc(sizeof(Entity*) * 10);
+    // Entity** entities = malloc(sizeof(Entity*) * 10);
 
-    for(int i = 0; i < 10; i++){
-        entities[i] = newEntity(mesh);
-        //enScale(entities[i], (vec3){0.f, 0.1f, 0.1f});
-        float x = (float)rand() / (float)RAND_MAX;
-        float y = (float)rand() / (float)RAND_MAX;
-        float z = (float)rand() / (float)RAND_MAX;
+    // for(int i = 0; i < 10; i++){
+    //     entities[i] = newEntity(mesh);
+    //     //enScale(entities[i], (vec3){0.f, 0.1f, 0.1f});
+    //     float x = (float)rand() / (float)RAND_MAX;
+    //     float y = (float)rand() / (float)RAND_MAX;
+    //     float z = (float)rand() / (float)RAND_MAX;
 
-        enTranslate(entities[i], (vec3){x, y, z});
-    }
+    //     enTranslate(entities[i], (vec3){x, y, z});
+    // }
 
-    MasterRenderer* msr = newMasterRenderer(manager, 45.0f, program);
-    msr->entities = entities;
-    msr->arrLength = 10;
-
-    printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d, normals: %d\n", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv, mesh->nbo);
+    //printf("Loaded mesh from obj: vao: %d, vbo: %d, ebo: %d, uv: %d, normals: %d\n", mesh->vao, mesh->vbo, mesh->ebo, mesh->uv, mesh->nbo);
 
     fflush(stdout);
     Renderer* renderer = newRenderer(45.f, 1024, 768, 0.1f, 100.f);
@@ -77,12 +83,15 @@ int main() {
 
     do {
         prepareRenderer(renderer, program, camera);
+        useProgram(programText);
+            renderText(programText, "sample text", 25.f, 1.f, 1.f, (vec3){0.5f, 0.8f, 0.2f}, renderer, charset);
+        stopProgram(programText);
+        
+        // useProgram(program);
+        //     for(int i = 0; i < 10; i++)
+        //         renderEntity(renderer, entities[i], program, light);
+        // stopProgram(program);
 
-        useProgram(program);
-            for(int i = 0; i < 10; i++)
-                renderEntity(renderer, entities[i], program, light);
-        stopProgram(program);
-        //renderMaster(msr, light, camera);
 
         update(manager);
     } while(isCloseRequested(manager) == 0);
@@ -94,15 +103,16 @@ int main() {
     shaderProgramCleanup(program);
     free(shaders);
 
-    deleteMesh(mesh);
-    ent->mesh = NULL;
-    entityCleanup(ent);
+    // deleteMesh(mesh);
+    // ent->mesh = NULL;
+    // entityCleanup(ent);
 
     rendererCleanup(renderer);
     cameraCleanup(camera);
     deleteLight(light);
-    deleteMasterRenderer(msr, 0, 1);
     deleteCharSet(charset);
+    shaderProgramCleanup(programText);
+    free(shaderText);
 
     return 0;
 }

@@ -9,8 +9,9 @@
 
 #include "../Utils/Mat.h"
 #include "ShaderProgram.h"
+#include "../GUI/Label.h"
 
-
+#include <string.h>
 
 
 void prepareRenderer(Renderer* renderer, ShaderProgram* program, Camera* camera){
@@ -211,10 +212,66 @@ Renderer* newRenderer(float fov, float height, float width, float near, float fa
     renderer->far = far;
     renderer->ortho = createOrthoMatrix(0.0, width, 0.0, height, near, far);
 
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    renderer->textVAO = VAO;
+    renderer->textVBO = VBO;
+
+    printf("Renderer vao %d vbo %d\n", VAO, VBO);
+
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
     return renderer;
+}
+
+void renderText(ShaderProgram* program, char* text, float x, float y, float scale, vec3 color, Renderer* renderer, Character** charset){
+    loadMatrix(program, renderer->ortho, "projection");
+    loadVec3(program, color, "textColor");
+    
+    glBindVertexArray(renderer->textVAO);
+    glActiveTexture(GL_TEXTURE0);
+
+    for(int i = 0; i < strlen(text); i++){
+        Character* ch = charset[text[i]];
+
+        float xpos = x + ((float)ch->bearing_x) * scale;
+        float ypos = y - ((float)(ch->size_y - ch->bearing_y)) * scale;
+
+        float w = ((float)ch->size_x) * scale;
+        float h = ((float)ch->size_y) * scale;
+
+        float vertices[6][4] = {
+            { xpos,     ypos + h,   0.0f, 0.0f },            
+            { xpos,     ypos,       0.0f, 1.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + w, ypos + h,   1.0f, 0.0f } 
+        };
+
+        glBindTexture(GL_TEXTURE_2D, ch->textureID);
+        glBindBuffer(GL_ARRAY_BUFFER, renderer->textVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        x += (ch->advance >> 6) * scale;
+    }
+
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void updateProjection(Renderer* renderer){

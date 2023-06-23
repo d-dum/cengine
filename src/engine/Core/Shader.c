@@ -41,6 +41,8 @@ Shader* newShader(char* shaderFilePath, GLenum type){
     shader->shaderId = shaderId;
     shader->type = type;
 
+    printf("Compiling shader: %s, %d\n", shaderFilePath, shaderId);
+
     free(source);
 
     return shader;

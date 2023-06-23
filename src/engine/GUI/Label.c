@@ -33,23 +33,32 @@ Character** loadFont(char* path, int pixelSize){
 
     for(unsigned char c = 0; c < 128; c++){
         Character* character = (Character*) malloc(sizeof(Character));
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)){
+        int result = FT_Load_Char(face, c, FT_LOAD_RENDER);
+        FT_GlyphSlot glyph = face->glyph;
+        if (result){
             fprintf(stderr, "ERROR::FREETYTPE: Failed to load Glyph\n");
             continue;
         }
         unsigned int texture;
         glGenTextures(1, &texture);
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR) {
+            fprintf(stderr, "ERROR: Failed to generate texture\n");
+            free(character);
+            continue;
+        }
+
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
             GL_RED,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
+            glyph->bitmap.width,
+            glyph->bitmap.rows,
             0,
             GL_RED,
             GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer
+            glyph->bitmap.buffer
         );
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -59,11 +68,14 @@ Character** loadFont(char* path, int pixelSize){
 
         character->textureID = texture;
 
-        character->size_x = face->glyph->bitmap.width;
-        character->size_y = face->glyph->bitmap.rows;
+        printf("TextureId: %d, character %c\n", texture, c);
 
-        character->bearing_x = face->glyph->bitmap_left;
-        character->bearing_y = face->glyph->bitmap_top;
+        character->size_x = glyph->bitmap.width;
+        character->size_y = glyph->bitmap.rows;
+
+        character->bearing_x = glyph->bitmap_left;
+        character->bearing_y = glyph->bitmap_top;
+        character->advance = glyph->advance.x;
 
         charSet[c] = character;
     }
